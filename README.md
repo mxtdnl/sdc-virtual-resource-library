@@ -48,7 +48,8 @@ storage, and no analytics on answers.
 Work in progress is autosaved to `localStorage` on the student's own device, namespaced per
 exercise (`sdc-vrl:v1:<slug>:<field>`), so a refresh or an accidental navigation doesn't lose
 a session. Exercises with saved work show an "In progress" badge in the library, and answers
-can be cleared per exercise or all at once from the library page.
+can be cleared per exercise, or from the library's "Clear memory" card, which lists what each
+exercise is storing and clears whichever ones are ticked.
 
 ### Theme
 
@@ -91,6 +92,7 @@ Tailwind CSS 4 with oklch design tokens · Vite 7. No backend, no database.
 src/routes/           index (library) and exercise/$slug; __root is the app shell
 src/lib/exercises.ts  the catalogue — the single source of truth
 src/lib/exercise-storage.ts  per-exercise localStorage autosave
+src/components/ClearMemoryDialog.tsx  "Clear memory" button + per-exercise clear card
 src/lib/theme.ts      light / dark / system theme
 src/exercises/        one component per exercise, plus _shared.tsx primitives
 src/styles.css        design tokens (light + dark) and Tailwind entry

@@ -107,9 +107,6 @@ describe("library home", () => {
   it("says nothing about saved work on a clean device", async () => {
     await renderApp("/");
     expect(screen.queryByText(/saved on this device/)).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: /clear all saved answers/i }),
-    ).not.toBeInTheDocument();
   });
 
   it("badges exercises that have saved work and counts them", async () => {
@@ -132,33 +129,114 @@ describe("library home", () => {
     );
   });
 
-  it("asks for confirmation before clearing everything", async () => {
+  it("offers the clear-memory button even on a clean device", async () => {
+    const user = userEvent.setup();
+    await renderApp("/");
+
+    await user.click(screen.getByRole("button", { name: /clear memory/i }));
+    expect(
+      screen.getByText("No exercises are storing anything on this device."),
+    ).toBeInTheDocument();
+  });
+
+  it("lists which exercises are storing memory, with their field counts", async () => {
+    window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
+    window.localStorage.setItem("sdc-vrl:v1:ikigai:other", '"more"');
+    window.localStorage.setItem(savedKey("box-breathing"), '"in progress"');
+    const user = userEvent.setup();
+    await renderApp("/");
+
+    await user.click(await screen.findByRole("button", { name: /clear memory/i }));
+    const card = screen.getByRole("dialog");
+
+    expect(within(card).getByRole("checkbox", { name: /ikigai/i })).toBeInTheDocument();
+    expect(within(card).getByText(/2 saved items/)).toBeInTheDocument();
+    expect(within(card).getByText(/1 saved item$/)).toBeInTheDocument();
+    expect(within(card).getByRole("checkbox", { name: /select all \(2\)/i })).toBeInTheDocument();
+    // Untouched exercises are not listed.
+    expect(within(card).queryByRole("checkbox", { name: /wheel of life/i })).toBeNull();
+  });
+
+  it("clears only the ticked exercises", async () => {
+    window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
+    window.localStorage.setItem(savedKey("box-breathing"), '"in progress"');
+    const user = userEvent.setup();
+    await renderApp("/");
+
+    await user.click(await screen.findByRole("button", { name: /clear memory/i }));
+    const card = screen.getByRole("dialog");
+    await user.click(within(card).getByRole("checkbox", { name: /ikigai/i }));
+    await user.click(within(card).getByRole("button", { name: /clear selected \(1\)/i }));
+    await user.click(within(card).getByRole("button", { name: /yes, clear selected/i }));
+
+    await waitFor(() => expect(window.localStorage.getItem(savedKey("ikigai"))).toBeNull());
+    expect(window.localStorage.getItem(savedKey("box-breathing"))).toBe('"in progress"');
+    expect(within(card).getByRole("checkbox", { name: /box breathing/i })).toBeInTheDocument();
+  });
+
+  it("can cancel the confirmation without clearing", async () => {
     window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
     const user = userEvent.setup();
     await renderApp("/");
 
-    await user.click(await screen.findByRole("button", { name: /clear all saved answers/i }));
-    expect(screen.getByRole("button", { name: /yes, clear everything/i })).toBeInTheDocument();
+    await user.click(await screen.findByRole("button", { name: /clear memory/i }));
+    const card = screen.getByRole("dialog");
+    await user.click(within(card).getByRole("checkbox", { name: /ikigai/i }));
+    await user.click(within(card).getByRole("button", { name: /clear selected \(1\)/i }));
+    await user.click(within(card).getByRole("button", { name: /^cancel$/i }));
 
-    await user.click(screen.getByRole("button", { name: /^cancel$/i }));
     expect(window.localStorage.getItem(savedKey("ikigai"))).toBe('"in progress"');
-    expect(screen.getByRole("button", { name: /clear all saved answers/i })).toBeInTheDocument();
+    expect(within(card).getByRole("button", { name: /clear selected \(1\)/i })).toBeInTheDocument();
   });
 
-  it("clears every saved answer once confirmed", async () => {
+  it("cannot clear with nothing ticked", async () => {
+    window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
+    const user = userEvent.setup();
+    await renderApp("/");
+
+    await user.click(await screen.findByRole("button", { name: /clear memory/i }));
+    expect(screen.getByRole("button", { name: /clear selected \(0\)/i })).toBeDisabled();
+  });
+
+  it("select all clears everything at once, leaving the theme alone", async () => {
     window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
     window.localStorage.setItem(savedKey("box-breathing"), '"in progress"');
     window.localStorage.setItem("sdc-vrl:theme", "dark");
     const user = userEvent.setup();
     await renderApp("/");
 
-    await user.click(await screen.findByRole("button", { name: /clear all saved answers/i }));
-    await user.click(screen.getByRole("button", { name: /yes, clear everything/i }));
+    await user.click(await screen.findByRole("button", { name: /clear memory/i }));
+    const card = screen.getByRole("dialog");
+    await user.click(within(card).getByRole("checkbox", { name: /select all/i }));
+    await user.click(within(card).getByRole("button", { name: /clear selected \(2\)/i }));
+    await user.click(within(card).getByRole("button", { name: /yes, clear everything/i }));
 
     await waitFor(() => expect(screen.queryByText("In progress")).not.toBeInTheDocument());
     expect(window.localStorage.getItem(savedKey("ikigai"))).toBeNull();
+    expect(window.localStorage.getItem(savedKey("box-breathing"))).toBeNull();
     // The theme is not exercise data and must survive.
     expect(window.localStorage.getItem("sdc-vrl:theme")).toBe("dark");
+  });
+
+  it("closes the card without touching anything", async () => {
+    window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
+    const user = userEvent.setup();
+    await renderApp("/");
+
+    await user.click(await screen.findByRole("button", { name: /clear memory/i }));
+    await user.click(screen.getByRole("button", { name: /^close$/i }));
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem(savedKey("ikigai"))).toBe('"in progress"');
+  });
+
+  it("closes the card on Escape", async () => {
+    const user = userEvent.setup();
+    await renderApp("/");
+
+    await user.click(screen.getByRole("button", { name: /clear memory/i }));
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("offers the theme toggle", async () => {

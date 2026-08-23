@@ -205,6 +205,7 @@ src/
 │   ├── _shared.tsx          Shared UI primitives
 │   └── <38 exercise components>.tsx
 ├── components/
+│   ├── ClearMemoryDialog.tsx  "Clear memory" button + per-exercise clear card
 │   ├── ThemeToggle.tsx      Light / system / dark control
 │   └── ui/                  shadcn/ui primitives (vendored, entirely unused)
 ├── hooks/use-mobile.tsx
@@ -332,15 +333,21 @@ Contract:
 | **No spurious saves** | A write happens only when the serialised value actually differs from what is stored (or from the untouched default). Opening an exercise and reading it never creates a save. |
 | **Sets** | `Set` values are serialised through an explicit `{ __t: "Set", v: [...] }` envelope, since some exercises hold answers in a `Set`. |
 | **Failure** | Private modes, disabled storage, and quota errors are caught: the exercise keeps working in memory, it just stops being restorable. |
-| **Clearing** | Per exercise from the banner on the exercise page, or all at once from the library. Clearing removes the keys and remounts the component (via a `key` bump) so in-memory state resets too. |
+| **Clearing** | Per exercise from the banner on the exercise page, or from the library's **Clear memory** card, which lists every exercise holding data (with its field count) and clears whichever boxes are ticked — one, several, or all. Clearing removes the keys and remounts the component (via a `key` bump) so in-memory state resets too. |
 
 **What is *not* persisted:** transient UI and timer state — drag targets, hover zones,
 card-flip state, quiz progress, and running countdowns. `_shared`-level subcomponents that
 are rendered more than once per page (e.g. `SectionActioning`) must also stay on plain
 `useState`, since a single storage key would be shared across every instance.
 
-Two surfaces expose the saved state: an "In progress" badge on library cards, and a banner on
-the exercise page stating that answers are device-local, with the clear control.
+Three surfaces expose the saved state: an "In progress" badge on library cards, a banner on
+the exercise page stating that answers are device-local with the clear control, and the
+**Clear memory** button in the library header (`src/components/ClearMemoryDialog.tsx`). That
+button opens a modal card listing exactly what this device is storing — exercise title,
+category and number of saved fields, with data from a renamed or retired slug still listed by
+its slug so it can be cleared. A checkbox per row plus a "select all" row choose what to
+forget; a confirmation step precedes the delete. The card is keyboard-dismissable (Escape) and
+backdrop-dismissable, and it leaves the theme choice alone.
 
 ---
 

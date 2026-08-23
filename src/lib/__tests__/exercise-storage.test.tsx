@@ -6,10 +6,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   clearAllExercises,
   clearExercise,
+  clearExercises,
   hasSavedWork,
   onStorageChange,
+  savedFieldCount,
+  savedMemory,
   savedSlugs,
   usePersistentState,
+  useSavedMemory,
   useHasSavedWork,
   useSavedSlugs,
 } from "@/lib/exercise-storage";
@@ -318,6 +322,85 @@ describe("clearExercise / clearAllExercises", () => {
     stubStorage(null);
     expect(() => clearExercise("alpha")).not.toThrow();
     expect(() => clearAllExercises()).not.toThrow();
+  });
+});
+
+describe("savedFieldCount / savedMemory", () => {
+  it("counts the fields each exercise is storing", () => {
+    window.localStorage.setItem(key("alpha", "a"), '"1"');
+    window.localStorage.setItem(key("alpha", "b"), '"2"');
+    window.localStorage.setItem(key("beta", "a"), '"3"');
+    window.localStorage.setItem(THEME_KEY, "dark");
+
+    expect(savedFieldCount("alpha")).toBe(2);
+    expect(savedFieldCount("beta")).toBe(1);
+    expect(savedFieldCount("gamma")).toBe(0);
+    expect(savedMemory().sort((x, y) => x.slug.localeCompare(y.slug))).toEqual([
+      { slug: "alpha", fields: 2 },
+      { slug: "beta", fields: 1 },
+    ]);
+  });
+
+  it("reports nothing on a clean device or when storage is unavailable", () => {
+    expect(savedMemory()).toEqual([]);
+    stubStorage(null);
+    expect(savedMemory()).toEqual([]);
+    expect(savedFieldCount("alpha")).toBe(0);
+  });
+});
+
+describe("clearExercises (several at once)", () => {
+  it("clears exactly the named exercises", () => {
+    window.localStorage.setItem(key("alpha", "a"), '"1"');
+    window.localStorage.setItem(key("beta", "a"), '"2"');
+    window.localStorage.setItem(key("gamma", "a"), '"3"');
+
+    clearExercises(["alpha", "gamma"]);
+
+    expect(savedSlugs()).toEqual(["beta"]);
+  });
+
+  it("does not clear a slug that merely shares a prefix", () => {
+    window.localStorage.setItem(key("wheel-of-life", "a"), '"1"');
+    window.localStorage.setItem(key("wheel-of-life-extended", "a"), '"2"');
+
+    clearExercises(["wheel-of-life"]);
+
+    expect(savedSlugs()).toEqual(["wheel-of-life-extended"]);
+  });
+
+  it("announces a single change for the whole batch", () => {
+    window.localStorage.setItem(key("alpha", "a"), '"1"');
+    window.localStorage.setItem(key("beta", "a"), '"2"');
+    const listener = vi.fn();
+    const unsubscribe = onStorageChange(listener);
+
+    clearExercises(["alpha", "beta"]);
+
+    expect(listener).toHaveBeenCalledTimes(1);
+    unsubscribe();
+  });
+
+  it("is a no-op for an empty list, a clean device, or unavailable storage", () => {
+    window.localStorage.setItem(key("alpha", "a"), '"1"');
+    clearExercises([]);
+    expect(savedSlugs()).toEqual(["alpha"]);
+
+    expect(() => clearExercises(["nothing"])).not.toThrow();
+    stubStorage(null);
+    expect(() => clearExercises(["alpha"])).not.toThrow();
+  });
+});
+
+describe("useSavedMemory", () => {
+  it("starts empty and then reports what is stored, live", async () => {
+    window.localStorage.setItem(key("alpha", "a"), '"1"');
+    const { result } = renderHook(() => useSavedMemory());
+
+    await waitFor(() => expect(result.current).toEqual([{ slug: "alpha", fields: 1 }]));
+
+    act(() => clearExercises(["alpha"]));
+    await waitFor(() => expect(result.current).toEqual([]));
   });
 });
 

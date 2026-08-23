@@ -74,6 +74,19 @@ export function hasSavedWork(slug: string): boolean {
   return false;
 }
 
+/** How many stored fields one exercise is holding on this device. */
+export function savedFieldCount(slug: string): number {
+  const s = getStorage();
+  if (!s) return 0;
+  const prefix = `${PREFIX}${slug}:`;
+  let count = 0;
+  for (let i = 0; i < s.length; i++) {
+    const key = s.key(i);
+    if (key && key.startsWith(prefix)) count++;
+  }
+  return count;
+}
+
 /** Delete every saved field for one exercise. */
 export function clearExercise(slug: string) {
   const s = getStorage();
@@ -83,6 +96,21 @@ export function clearExercise(slug: string) {
   for (let i = 0; i < s.length; i++) {
     const key = s.key(i);
     if (key && key.startsWith(prefix)) doomed.push(key);
+  }
+  doomed.forEach((k) => s.removeItem(k));
+  notifyChange();
+}
+
+/** Delete the saved fields for several exercises at once, announcing one change. */
+export function clearExercises(slugs: Iterable<string>) {
+  const s = getStorage();
+  if (!s) return;
+  const prefixes = [...slugs].map((slug) => `${PREFIX}${slug}:`);
+  if (prefixes.length === 0) return;
+  const doomed: string[] = [];
+  for (let i = 0; i < s.length; i++) {
+    const key = s.key(i);
+    if (key && prefixes.some((p) => key.startsWith(p))) doomed.push(key);
   }
   doomed.forEach((k) => s.removeItem(k));
   notifyChange();
@@ -199,6 +227,35 @@ export function useSavedSlugs(): Set<string> {
   }, []);
 
   return slugs;
+}
+
+export type SavedMemory = { slug: string; fields: number };
+
+/** One entry per exercise holding data on this device, with its field count. */
+export function savedMemory(): SavedMemory[] {
+  const counts = new Map<string, number>();
+  const s = getStorage();
+  if (!s) return [];
+  for (let i = 0; i < s.length; i++) {
+    const key = s.key(i);
+    if (!key || !key.startsWith(PREFIX)) continue;
+    const slug = key.slice(PREFIX.length).split(":")[0];
+    if (slug) counts.set(slug, (counts.get(slug) ?? 0) + 1);
+  }
+  return [...counts].map(([slug, fields]) => ({ slug, fields }));
+}
+
+/** Reports what each exercise is storing on this device, live. */
+export function useSavedMemory(): SavedMemory[] {
+  const [entries, setEntries] = useState<SavedMemory[]>([]);
+
+  useEffect(() => {
+    const sync = () => setEntries(savedMemory());
+    sync();
+    return onStorageChange(sync);
+  }, []);
+
+  return entries;
 }
 
 /** Reports whether this exercise currently has saved work, live. */

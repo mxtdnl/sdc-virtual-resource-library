@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { EXERCISES, getCategories } from "@/lib/exercises";
-import { clearAllExercises, useSavedSlugs } from "@/lib/exercise-storage";
+import { useSavedSlugs } from "@/lib/exercise-storage";
+import { ClearMemoryButton } from "@/components/ClearMemoryDialog";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const Route = createFileRoute("/")({
@@ -27,7 +28,6 @@ export const Route = createFileRoute("/")({
 function LibraryHome() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
-  const [confirmingClear, setConfirmingClear] = useState(false);
   const categories = getCategories();
   const inProgress = useSavedSlugs();
 
@@ -52,7 +52,10 @@ function LibraryHome() {
             <h1 className="text-2xl font-semibold tracking-tight text-ink-red-deep">
               Coaching Exercise Library
             </h1>
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <ClearMemoryButton />
+              <ThemeToggle />
+            </div>
           </div>
           <p className="text-sm text-muted-foreground mt-2 max-w-2xl">
             Interactive versions of coaching worksheets. Pick one, work through it
@@ -152,38 +155,10 @@ function LibraryHome() {
         )}
 
         {inProgress.size > 0 && (
-          <div className="flex flex-wrap items-center justify-center gap-3 rounded-lg border border-ink-brown/25 bg-ink-brown-soft/50 px-4 py-3 text-xs">
-            <p className="text-muted-foreground">
-              {inProgress.size} exercise{inProgress.size === 1 ? "" : "s"} saved on this
-              device. Nothing is uploaded — clearing your browser data removes it.
-            </p>
-            {confirmingClear ? (
-              <span className="flex items-center gap-2">
-                <button
-                  onClick={() => {
-                    clearAllExercises();
-                    setConfirmingClear(false);
-                  }}
-                  className="rounded-md bg-destructive px-2.5 py-1 font-medium text-destructive-foreground hover:opacity-90"
-                >
-                  Yes, clear everything
-                </button>
-                <button
-                  onClick={() => setConfirmingClear(false)}
-                  className="rounded-md border border-border px-2.5 py-1 hover:bg-secondary"
-                >
-                  Cancel
-                </button>
-              </span>
-            ) : (
-              <button
-                onClick={() => setConfirmingClear(true)}
-                className="rounded-md border border-border px-2.5 py-1 hover:bg-secondary"
-              >
-                Clear all saved answers
-              </button>
-            )}
-          </div>
+          <p className="rounded-lg border border-ink-brown/25 bg-ink-brown-soft/50 px-4 py-3 text-center text-xs text-muted-foreground">
+            {inProgress.size} exercise{inProgress.size === 1 ? "" : "s"} saved on this device.
+            Nothing is uploaded — use “Clear memory” above to choose what to forget.
+          </p>
         )}
 
         <p className="text-xs text-muted-foreground text-center pt-8">
