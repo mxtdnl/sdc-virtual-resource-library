@@ -23,12 +23,7 @@ export const Route = createFileRoute("/")({
 
 function BauhausIllustration() {
   return (
-    <svg
-      viewBox="0 0 800 500"
-      className="w-full h-auto"
-      aria-hidden="true"
-      role="img"
-    >
+    <svg viewBox="0 0 800 500" className="w-full h-auto" aria-hidden="true" role="img">
       {/* Large ochre circle — bottom right */}
       <circle cx="620" cy="340" r="180" className="fill-ink-ochre/20" />
       {/* Red rectangle — left, angled */}
@@ -56,14 +51,7 @@ function BauhausIllustration() {
       {/* Small red circle — left */}
       <circle cx="140" cy="360" r="60" className="fill-ink-red/12" />
       {/* Brown rectangle — bottom left */}
-      <rect
-        x="30"
-        y="300"
-        width="180"
-        height="100"
-        rx="4"
-        className="fill-ink-brown/12"
-      />
+      <rect x="30" y="300" width="180" height="100" rx="4" className="fill-ink-brown/12" />
       {/* Purple rectangle — mid */}
       <rect
         x="380"
@@ -77,23 +65,9 @@ function BauhausIllustration() {
       {/* Ochre small circle — top left */}
       <circle cx="80" cy="60" r="40" className="fill-ink-ochre/16" />
       {/* Thin red diagonal line */}
-      <line
-        x1="100"
-        y1="20"
-        x2="700"
-        y2="420"
-        className="stroke-ink-red/20"
-        strokeWidth="3"
-      />
+      <line x1="100" y1="20" x2="700" y2="420" className="stroke-ink-red/20" strokeWidth="3" />
       {/* Thin orange horizontal line */}
-      <line
-        x1="0"
-        y1="250"
-        x2="800"
-        y2="250"
-        className="stroke-ink-orange/12"
-        strokeWidth="2"
-      />
+      <line x1="0" y1="250" x2="800" y2="250" className="stroke-ink-orange/12" strokeWidth="2" />
       {/* Small purple square */}
       <rect
         x="520"
@@ -104,19 +78,9 @@ function BauhausIllustration() {
         transform="rotate(15 540 70)"
       />
       {/* Ochre semi-circle at bottom */}
-      <path
-        d="M300,500 A120,120 0 0,1 540,500"
-        className="fill-ink-ochre/14"
-      />
+      <path d="M300,500 A120,120 0 0,1 540,500" className="fill-ink-ochre/14" />
       {/* Red vertical bar */}
-      <rect
-        x="700"
-        y="60"
-        width="30"
-        height="300"
-        rx="2"
-        className="fill-ink-red/10"
-      />
+      <rect x="700" y="60" width="30" height="300" rx="2" className="fill-ink-red/10" />
     </svg>
   );
 }
@@ -139,9 +103,9 @@ function LandingPage() {
             Hult Student Development Exercise Library
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground max-w-xl">
-            Interactive coaching exercises for undergraduate students. Pick an
-            exercise, work through it on screen, and walk away with a structured
-            result you can print or save — no PDFs, no accounts.
+            Interactive coaching exercises for undergraduate students. Pick an exercise, work
+            through it on screen, and walk away with a structured result you can print or save — no
+            PDFs, no accounts.
           </p>
         </div>
 
@@ -171,10 +135,7 @@ function LandingPage() {
                 <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
                   3
                 </span>
-                <span>
-                  A structured summary is generated — ready to print or save as
-                  PDF
-                </span>
+                <span>A structured summary is generated — ready to print or save as PDF</span>
               </li>
             </ol>
           </div>
@@ -189,25 +150,20 @@ function LandingPage() {
                   —
                 </span>
                 <span>
-                  No accounts, no data collection — every answer stays on the
-                  student's device
+                  No accounts, no data collection — every answer stays on the student's device
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="flex-none text-ink-orange" aria-hidden="true">
                   —
                 </span>
-                <span>
-                  Time estimates on every exercise so you can plan your session
-                </span>
+                <span>Time estimates on every exercise so you can plan your session</span>
               </li>
               <li className="flex gap-3">
                 <span className="flex-none text-ink-orange" aria-hidden="true">
                   —
                 </span>
-                <span>
-                  Works on any device with a browser — phone, tablet, or laptop
-                </span>
+                <span>Works on any device with a browser — phone, tablet, or laptop</span>
               </li>
             </ul>
           </div>
