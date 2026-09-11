@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 import { EXERCISES, getCategories } from "@/lib/exercises";
-import { Route } from "@/routes/index";
+import { Route } from "@/routes/library";
 import { renderApp } from "@/test/render";
 import { routeMeta } from "@/test/route-options";
 
@@ -11,14 +11,14 @@ const savedKey = (slug: string) => `sdc-vrl:v1:${slug}:field`;
 
 describe("library home", () => {
   it("lists every exercise", async () => {
-    await renderApp("/");
+    await renderApp("/library");
     for (const exercise of EXERCISES) {
       expect(screen.getByRole("heading", { name: exercise.title })).toBeInTheDocument();
     }
   });
 
   it("shows each card's category, duration and tags", async () => {
-    await renderApp("/");
+    await renderApp("/library");
     const first = EXERCISES[0];
     const card = screen.getByRole("heading", { name: first.title }).closest("a")!;
 
@@ -29,7 +29,7 @@ describe("library home", () => {
   });
 
   it("offers a filter button per category, plus All", async () => {
-    await renderApp("/");
+    await renderApp("/library");
     expect(screen.getByRole("button", { name: "All" })).toBeInTheDocument();
     for (const category of getCategories()) {
       expect(screen.getByRole("button", { name: category })).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe("library home", () => {
 
   it("filters by category and back again", async () => {
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
     const wellbeing = EXERCISES.filter((e) => e.category === "Wellbeing");
 
     await user.click(screen.getByRole("button", { name: "Wellbeing" }));
@@ -50,7 +50,7 @@ describe("library home", () => {
 
   it("searches titles", async () => {
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.type(screen.getByPlaceholderText("Search exercises…"), "box breathing");
     expect(screen.getAllByRole("listitem")).toHaveLength(1);
@@ -59,7 +59,7 @@ describe("library home", () => {
 
   it("searches descriptions and tags too", async () => {
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
     const search = screen.getByPlaceholderText("Search exercises…");
 
     await user.type(search, "eisenhower");
@@ -73,14 +73,14 @@ describe("library home", () => {
 
   it("ignores case and surrounding whitespace in the search", async () => {
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
     await user.type(screen.getByPlaceholderText("Search exercises…"), "  IKIGAI  ");
     expect(screen.getByRole("heading", { name: "Ikigai" })).toBeInTheDocument();
   });
 
   it("combines search with the category filter", async () => {
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.click(screen.getByRole("button", { name: "Wellbeing" }));
     await user.type(screen.getByPlaceholderText("Search exercises…"), "ikigai");
@@ -89,7 +89,7 @@ describe("library home", () => {
 
   it("explains an empty result", async () => {
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
     await user.type(screen.getByPlaceholderText("Search exercises…"), "zzzzzz");
 
     expect(screen.getByText("No exercises match your search.")).toBeInTheDocument();
@@ -98,21 +98,21 @@ describe("library home", () => {
 
   it("navigates to an exercise when its card is clicked", async () => {
     const user = userEvent.setup();
-    const app = await renderApp("/");
+    const app = await renderApp("/library");
 
     await user.click(screen.getByRole("heading", { name: "Ikigai" }).closest("a")!);
     await waitFor(() => expect(app.currentPath()).toBe("/exercise/ikigai"));
   });
 
   it("says nothing about saved work on a clean device", async () => {
-    await renderApp("/");
+    await renderApp("/library");
     expect(screen.queryByText(/saved on this device/)).not.toBeInTheDocument();
   });
 
   it("badges exercises that have saved work and counts them", async () => {
     window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
     window.localStorage.setItem(savedKey("box-breathing"), '"in progress"');
-    await renderApp("/");
+    await renderApp("/library");
 
     await waitFor(() => expect(screen.getAllByText("In progress")).toHaveLength(2));
     expect(screen.getByText(/2 exercises saved on this device/)).toBeInTheDocument();
@@ -123,7 +123,7 @@ describe("library home", () => {
 
   it("uses the singular for one saved exercise", async () => {
     window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
-    await renderApp("/");
+    await renderApp("/library");
     await waitFor(() =>
       expect(screen.getByText(/1 exercise saved on this device/)).toBeInTheDocument(),
     );
@@ -131,7 +131,7 @@ describe("library home", () => {
 
   it("offers the clear-memory button even on a clean device", async () => {
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.click(screen.getByRole("button", { name: /clear memory/i }));
     expect(
@@ -144,7 +144,7 @@ describe("library home", () => {
     window.localStorage.setItem("sdc-vrl:v1:ikigai:other", '"more"');
     window.localStorage.setItem(savedKey("box-breathing"), '"in progress"');
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.click(await screen.findByRole("button", { name: /clear memory/i }));
     const card = screen.getByRole("dialog");
@@ -161,7 +161,7 @@ describe("library home", () => {
     window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
     window.localStorage.setItem(savedKey("box-breathing"), '"in progress"');
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.click(await screen.findByRole("button", { name: /clear memory/i }));
     const card = screen.getByRole("dialog");
@@ -177,7 +177,7 @@ describe("library home", () => {
   it("can cancel the confirmation without clearing", async () => {
     window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.click(await screen.findByRole("button", { name: /clear memory/i }));
     const card = screen.getByRole("dialog");
@@ -192,7 +192,7 @@ describe("library home", () => {
   it("cannot clear with nothing ticked", async () => {
     window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.click(await screen.findByRole("button", { name: /clear memory/i }));
     expect(screen.getByRole("button", { name: /clear selected \(0\)/i })).toBeDisabled();
@@ -203,7 +203,7 @@ describe("library home", () => {
     window.localStorage.setItem(savedKey("box-breathing"), '"in progress"');
     window.localStorage.setItem("sdc-vrl:theme", "dark");
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.click(await screen.findByRole("button", { name: /clear memory/i }));
     const card = screen.getByRole("dialog");
@@ -221,7 +221,7 @@ describe("library home", () => {
   it("closes the card without touching anything", async () => {
     window.localStorage.setItem(savedKey("ikigai"), '"in progress"');
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.click(await screen.findByRole("button", { name: /clear memory/i }));
     await user.click(screen.getByRole("button", { name: /^close$/i }));
@@ -232,7 +232,7 @@ describe("library home", () => {
 
   it("closes the card on Escape", async () => {
     const user = userEvent.setup();
-    await renderApp("/");
+    await renderApp("/library");
 
     await user.click(screen.getByRole("button", { name: /clear memory/i }));
     await user.keyboard("{Escape}");
@@ -240,7 +240,7 @@ describe("library home", () => {
   });
 
   it("offers the theme toggle", async () => {
-    await renderApp("/");
+    await renderApp("/library");
     expect(screen.getByRole("radiogroup", { name: "Colour theme" })).toBeInTheDocument();
   });
 

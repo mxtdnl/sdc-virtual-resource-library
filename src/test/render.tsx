@@ -39,6 +39,12 @@ export async function renderWithRouter(
     component: () => ui,
   });
 
+  const libraryRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: "/library",
+    component: () => ui,
+  });
+
   const detailRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/exercise/$slug",
@@ -46,7 +52,7 @@ export async function renderWithRouter(
   });
 
   const router = createRouter({
-    routeTree: rootRoute.addChildren([indexRoute, detailRoute]),
+    routeTree: rootRoute.addChildren([indexRoute, libraryRoute, detailRoute]),
     history: createMemoryHistory({ initialEntries: [path] }),
     defaultPendingMinMs: 0,
   });

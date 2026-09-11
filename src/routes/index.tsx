@@ -1,166 +1,232 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { EXERCISES, getCategories } from "@/lib/exercises";
-import { useSavedSlugs } from "@/lib/exercise-storage";
-import { ClearMemoryButton } from "@/components/ClearMemoryDialog";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Coaching Exercise Library — Interactive Worksheets" },
+      { title: "Hult Student Development — Exercise Library" },
       {
         name: "description",
         content:
-          "A growing library of interactive coaching exercises. Pick one, work through it online, and walk away with a clear result.",
+          "Interactive coaching exercises for undergraduate student development. Work through exercises on screen — no printing, no accounts.",
       },
-      { property: "og:title", content: "Coaching Exercise Library" },
+      { property: "og:title", content: "Hult Student Development — Exercise Library" },
       {
         property: "og:description",
-        content: "Interactive versions of coaching exercises — no printing required.",
+        content:
+          "Interactive coaching exercises for undergraduate student development. Work through exercises on screen — no printing, no accounts.",
       },
     ],
   }),
-  component: LibraryHome,
+  component: LandingPage,
 });
 
-function LibraryHome() {
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<string | null>(null);
-  const categories = getCategories();
-  const inProgress = useSavedSlugs();
+function BauhausIllustration() {
+  return (
+    <svg
+      viewBox="0 0 800 500"
+      className="w-full h-auto"
+      aria-hidden="true"
+      role="img"
+    >
+      {/* Large ochre circle — bottom right */}
+      <circle cx="620" cy="340" r="180" className="fill-ink-ochre/20" />
+      {/* Red rectangle — left, angled */}
+      <rect
+        x="60"
+        y="80"
+        width="260"
+        height="160"
+        rx="4"
+        className="fill-ink-red/15"
+        transform="rotate(-6 190 160)"
+      />
+      {/* Purple circle — top right */}
+      <circle cx="580" cy="100" r="90" className="fill-ink-purple/18" />
+      {/* Orange diagonal band */}
+      <rect
+        x="200"
+        y="200"
+        width="500"
+        height="50"
+        rx="2"
+        className="fill-ink-orange/14"
+        transform="rotate(-12 450 225)"
+      />
+      {/* Small red circle — left */}
+      <circle cx="140" cy="360" r="60" className="fill-ink-red/12" />
+      {/* Brown rectangle — bottom left */}
+      <rect
+        x="30"
+        y="300"
+        width="180"
+        height="100"
+        rx="4"
+        className="fill-ink-brown/12"
+      />
+      {/* Purple rectangle — mid */}
+      <rect
+        x="380"
+        y="140"
+        width="120"
+        height="240"
+        rx="4"
+        className="fill-ink-purple/10"
+        transform="rotate(8 440 260)"
+      />
+      {/* Ochre small circle — top left */}
+      <circle cx="80" cy="60" r="40" className="fill-ink-ochre/16" />
+      {/* Thin red diagonal line */}
+      <line
+        x1="100"
+        y1="20"
+        x2="700"
+        y2="420"
+        className="stroke-ink-red/20"
+        strokeWidth="3"
+      />
+      {/* Thin orange horizontal line */}
+      <line
+        x1="0"
+        y1="250"
+        x2="800"
+        y2="250"
+        className="stroke-ink-orange/12"
+        strokeWidth="2"
+      />
+      {/* Small purple square */}
+      <rect
+        x="520"
+        y="50"
+        width="40"
+        height="40"
+        className="fill-ink-purple/22"
+        transform="rotate(15 540 70)"
+      />
+      {/* Ochre semi-circle at bottom */}
+      <path
+        d="M300,500 A120,120 0 0,1 540,500"
+        className="fill-ink-ochre/14"
+      />
+      {/* Red vertical bar */}
+      <rect
+        x="700"
+        y="60"
+        width="30"
+        height="300"
+        rx="2"
+        className="fill-ink-red/10"
+      />
+    </svg>
+  );
+}
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return EXERCISES.filter((e) => {
-      if (category && e.category !== category) return false;
-      if (!q) return true;
-      return (
-        e.title.toLowerCase().includes(q) ||
-        e.description.toLowerCase().includes(q) ||
-        e.tags.some((t) => t.toLowerCase().includes(q))
-      );
-    });
-  }, [query, category]);
-
+function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-gradient-to-b from-ink-ochre-soft/70 to-card/40 backdrop-blur">
-        <div className="mx-auto max-w-5xl px-6 py-8">
-          <div className="flex items-start justify-between gap-4">
-            <h1 className="text-2xl font-semibold tracking-tight text-ink-red-deep">
-              Coaching Exercise Library
-            </h1>
-            <div className="flex items-center gap-2">
-              <ClearMemoryButton />
-              <ThemeToggle />
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground mt-2 max-w-2xl">
-            Interactive versions of coaching worksheets. Pick one, work through it online, and get a
-            clear result without printing anything.
-          </p>
+        <div className="mx-auto max-w-5xl px-6 py-5 flex items-center justify-between">
+          <span className="text-sm font-medium tracking-tight text-ink-red-deep">
+            Student Development Centre
+          </span>
+          <ThemeToggle />
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-6 py-10 space-y-8">
-        <div className="space-y-4">
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search exercises…"
-            className="w-full rounded-full border border-input bg-card px-4 py-2.5 text-sm shadow-sm outline-none placeholder:text-muted-foreground/80 focus:border-ink-orange focus:ring-2 focus:ring-ring"
-          />
+      <main className="mx-auto max-w-5xl px-6">
+        <div className="py-12 sm:py-16">
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-ink-red-deep max-w-xl">
+            Hult Student Development Exercise Library
+          </h1>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground max-w-xl">
+            Interactive coaching exercises for undergraduate students. Pick an
+            exercise, work through it on screen, and walk away with a structured
+            result you can print or save — no PDFs, no accounts.
+          </p>
+        </div>
 
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setCategory(null)}
-              className={`rounded-full px-3 py-1.5 text-xs transition-colors ${
-                category === null
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground hover:bg-accent"
-              }`}
-            >
-              All
-            </button>
-            {categories.map((c) => (
-              <button
-                key={c}
-                onClick={() => setCategory(c)}
-                className={`rounded-full px-3 py-1.5 text-xs transition-colors ${
-                  category === c
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-muted-foreground hover:bg-accent"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
+        <div className="rounded-2xl border border-border overflow-hidden bg-card/40">
+          <BauhausIllustration />
+        </div>
+
+        <div className="py-12 sm:py-16 grid gap-10 sm:grid-cols-2">
+          <div>
+            <h2 className="text-xs uppercase tracking-wider text-ink-orange font-semibold">
+              How it works
+            </h2>
+            <ol className="mt-4 space-y-3 text-sm leading-relaxed">
+              <li className="flex gap-3">
+                <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
+                  1
+                </span>
+                <span>Browse by category or search for a topic</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
+                  2
+                </span>
+                <span>The student works through the exercise on screen</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
+                  3
+                </span>
+                <span>
+                  A structured summary is generated — ready to print or save as
+                  PDF
+                </span>
+              </li>
+            </ol>
+          </div>
+
+          <div>
+            <h2 className="text-xs uppercase tracking-wider text-ink-orange font-semibold">
+              Why it's different
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm leading-relaxed">
+              <li className="flex gap-3">
+                <span className="flex-none text-ink-orange" aria-hidden="true">
+                  —
+                </span>
+                <span>
+                  No accounts, no data collection — every answer stays on the
+                  student's device
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex-none text-ink-orange" aria-hidden="true">
+                  —
+                </span>
+                <span>
+                  Time estimates on every exercise so you can plan your session
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex-none text-ink-orange" aria-hidden="true">
+                  —
+                </span>
+                <span>
+                  Works on any device with a browser — phone, tablet, or laptop
+                </span>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {filtered.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-12">
-            No exercises match your search.
-          </p>
-        ) : (
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {filtered.map((e) => (
-              <li key={e.slug}>
-                <Link
-                  to="/exercise/$slug"
-                  params={{ slug: e.slug }}
-                  className="group block h-full rounded-xl border border-border bg-card p-6 shadow-[0_1px_0_oklch(0.4_0.075_58_/_8%)] transition-all hover:-translate-y-0.5 hover:border-ink-orange/50 hover:bg-secondary/50 hover:shadow-[0_10px_24px_-12px_oklch(0.44_0.165_27_/_35%)]"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs uppercase tracking-wider text-ink-orange font-semibold">
-                      {e.category}
-                    </span>
-                    <span className="flex items-center gap-2 text-xs text-muted-foreground">
-                      {inProgress.has(e.slug) && (
-                        <span className="rounded-full bg-ink-purple-soft px-2 py-0.5 text-[10px] font-medium text-ink-purple">
-                          In progress
-                        </span>
-                      )}
-                      ~{e.estimatedMinutes} min
-                    </span>
-                  </div>
-                  <h2 className="mt-3 text-lg font-semibold tracking-tight">{e.title}</h2>
-                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                    {e.description}
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {e.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full bg-ink-brown-soft/60 px-2 py-0.5 text-[10px] text-ink-brown"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="mt-5 text-sm font-medium text-primary">
-                    Start exercise{" "}
-                    <span className="inline-block transition-transform group-hover:translate-x-1">
-                      →
-                    </span>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {inProgress.size > 0 && (
-          <p className="rounded-lg border border-ink-brown/25 bg-ink-brown-soft/50 px-4 py-3 text-center text-xs text-muted-foreground">
-            {inProgress.size} exercise{inProgress.size === 1 ? "" : "s"} saved on this device.
-            Nothing is uploaded — use “Clear memory” above to choose what to forget.
-          </p>
-        )}
-
-        <p className="text-xs text-muted-foreground text-center pt-8">
-          More exercises coming soon.
-        </p>
+        <div className="pb-16 sm:pb-20 flex justify-center">
+          <Link
+            to="/library"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
+          >
+            Browse the library
+            <span
+              className="inline-block transition-transform group-hover:translate-x-1"
+              aria-hidden="true"
+            >
+              →
+            </span>
+          </Link>
+        </div>
       </main>
     </div>
   );
