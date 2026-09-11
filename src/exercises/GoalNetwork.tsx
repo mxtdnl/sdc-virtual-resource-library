@@ -72,6 +72,21 @@ const LEVELS: { key: Level; title: string; kicker: string; blurb: string; placeh
 
 const KEY_OF: Record<Level, keyof Data> = { super: "supers", inter: "inters", sub: "subs" };
 
+function AutoTextArea({
+  value,
+  className,
+  ...props
+}: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  useLayoutEffect(() => {
+    if (ref.current) {
+      ref.current.style.height = "auto";
+      ref.current.style.height = ref.current.scrollHeight + "px";
+    }
+  }, [value]);
+  return <textarea ref={ref} value={value} rows={1} className={className} {...props} />;
+}
+
 export default function GoalNetwork() {
   const [data, setData] = usePersistentState<Data>(SLUG, "data", EMPTY);
   const [drafts, setDrafts] = useState<Record<Level, string>>({ super: "", inter: "", sub: "" });
@@ -393,7 +408,24 @@ function NetworkMap({
                 </p>
               )}
 
-              <div className="flex flex-wrap justify-center gap-4">
+              <div
+                className="grid gap-4"
+                style={{
+                  gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${
+                    row.nodes.length <= 1
+                      ? 280
+                      : row.nodes.length <= 2
+                        ? 240
+                        : row.nodes.length <= 3
+                          ? 200
+                          : row.nodes.length <= 4
+                            ? 170
+                            : row.nodes.length <= 5
+                              ? 150
+                              : 130
+                  }px), 1fr))`,
+                }}
+              >
                 {row.nodes.map((n) => {
                   const open = openId === n.id;
                   return (
@@ -402,15 +434,15 @@ function NetworkMap({
                       ref={setRef(n.id)}
                       onMouseEnter={() => setHover(n.id)}
                       onMouseLeave={() => setHover(null)}
-                      className={`w-full max-w-xs rounded-xl border bg-background p-3 text-sm ${
+                      className={`min-w-0 rounded-xl border bg-background p-3 text-sm break-words ${
                         n.links && n.links.length >= 2 ? "border-primary/60" : "border-border"
                       }`}
                     >
                       <div className="flex items-start gap-2">
-                        <TextInput
+                        <AutoTextArea
                           value={n.text}
                           onChange={(e) => update(row.level, n.id, { text: e.target.value })}
-                          className="flex-1 border-transparent bg-transparent px-1 text-sm font-medium"
+                          className="flex-1 resize-none overflow-hidden border-transparent bg-transparent px-1 text-sm font-medium"
                         />
                         {row.level === "sub" && (
                           <button
