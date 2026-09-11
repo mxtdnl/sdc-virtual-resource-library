@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePersistentState } from "@/lib/exercise-storage";
 import {
   IntroGrid,
@@ -284,9 +284,9 @@ function NetworkMap({
 }) {
   const wrap = useRef<HTMLDivElement | null>(null);
   const nodeRefs = useRef(new Map<string, HTMLElement>());
-  const [edges, setEdges] = useState<
-    { id: string; d: string; strong: boolean; color: string }[]
-  >([]);
+  const [edges, setEdges] = useState<{ id: string; d: string; strong: boolean; color: string }[]>(
+    [],
+  );
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [hover, setHover] = useState<string | null>(null);
 
@@ -295,7 +295,7 @@ function NetworkMap({
     else nodeRefs.current.delete(id);
   };
 
-  const measure = () => {
+  const measure = useCallback(() => {
     const box = wrap.current?.getBoundingClientRect();
     if (!box) return;
     setSize({ w: box.width, h: box.height });
@@ -334,7 +334,7 @@ function NetworkMap({
     data.inters.forEach((n) => link(n));
     data.subs.forEach((n) => link(n));
     setEdges(next);
-  };
+  }, [data]);
 
   useLayoutEffect(() => {
     measure();
@@ -347,7 +347,7 @@ function NetworkMap({
       window.removeEventListener("resize", measure);
       window.removeEventListener("beforeprint", measure);
     };
-  }, [data]);
+  }, [measure]);
 
   const rows: { level: Level; lv: (typeof LEVELS)[number]; nodes: Node[]; parents: Node[] }[] = [
     { level: "super", lv: LEVELS[0], nodes: data.supers, parents: [] },
@@ -371,7 +371,10 @@ function NetworkMap({
         </span>
       </div>
 
-      <div ref={wrap} className="goal-network-container relative rounded-2xl border border-border bg-card p-4">
+      <div
+        ref={wrap}
+        className="goal-network-container relative rounded-2xl border border-border bg-card p-4"
+      >
         <svg
           viewBox={`0 0 ${size.w} ${size.h}`}
           className="pointer-events-none absolute inset-0 h-full w-full"
