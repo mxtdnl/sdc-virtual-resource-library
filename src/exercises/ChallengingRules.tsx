@@ -151,7 +151,7 @@ export default function ChallengingRules() {
                   min={1}
                   max={10}
                   value={data[k]}
-                  onChange={(e) => u({ [k]: Number(e.target.value) } as any)}
+                  onChange={(e) => u({ [k]: Number(e.target.value) } as Partial<typeof data>)}
                   className="w-full mt-2 accent-[var(--primary)]"
                 />
               </div>

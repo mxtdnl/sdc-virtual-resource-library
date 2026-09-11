@@ -97,7 +97,8 @@ export default function ProcrastinationChecklist() {
 
   const toggle = (item: string) => {
     const next = new Set(checked);
-    next.has(item) ? next.delete(item) : next.add(item);
+    if (next.has(item)) next.delete(item);
+    else next.add(item);
     setChecked(next);
   };
 
