@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePersistentState } from "@/lib/exercise-storage";
 import {
   IntroGrid,
@@ -284,7 +284,9 @@ function NetworkMap({
 }) {
   const wrap = useRef<HTMLDivElement | null>(null);
   const nodeRefs = useRef(new Map<string, HTMLElement>());
-  const [edges, setEdges] = useState<{ id: string; d: string; strong: boolean }[]>([]);
+  const [edges, setEdges] = useState<{ id: string; d: string; strong: boolean; color: string }[]>(
+    [],
+  );
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [hover, setHover] = useState<string | null>(null);
 
@@ -293,43 +295,59 @@ function NetworkMap({
     else nodeRefs.current.delete(id);
   };
 
-  useLayoutEffect(() => {
-    const measure = () => {
-      const box = wrap.current?.getBoundingClientRect();
-      if (!box) return;
-      setSize({ w: box.width, h: box.height });
-      const next: { id: string; d: string; strong: boolean }[] = [];
-      const link = (child: Node) => {
-        const c = nodeRefs.current.get(child.id)?.getBoundingClientRect();
-        if (!c) return;
-        for (const parentId of child.links) {
-          const p = nodeRefs.current.get(parentId)?.getBoundingClientRect();
-          if (!p) continue;
-          const x1 = p.left + p.width / 2 - box.left;
-          const y1 = p.bottom - box.top;
-          const x2 = c.left + c.width / 2 - box.left;
-          const y2 = c.top - box.top;
-          const mid = (y1 + y2) / 2;
-          next.push({
-            id: `${child.id}-${parentId}`,
-            d: `M ${x1} ${y1} C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`,
-            strong: child.links.length >= 2,
-          });
-        }
-      };
-      data.inters.forEach((n) => link(n));
-      data.subs.forEach((n) => link(n));
-      setEdges(next);
+  const measure = useCallback(() => {
+    const box = wrap.current?.getBoundingClientRect();
+    if (!box) return;
+    setSize({ w: box.width, h: box.height });
+
+    const EDGE_COLORS = [
+      "var(--chart-1)",
+      "var(--chart-2)",
+      "var(--chart-3)",
+      "var(--chart-4)",
+      "var(--chart-5)",
+    ];
+    const parentColorMap = new Map<string, string>();
+    data.supers.forEach((n, i) => parentColorMap.set(n.id, EDGE_COLORS[i % EDGE_COLORS.length]));
+    data.inters.forEach((n, i) => parentColorMap.set(n.id, EDGE_COLORS[i % EDGE_COLORS.length]));
+
+    const next: { id: string; d: string; strong: boolean; color: string }[] = [];
+    const link = (child: Node) => {
+      const c = nodeRefs.current.get(child.id)?.getBoundingClientRect();
+      if (!c) return;
+      for (const parentId of child.links) {
+        const p = nodeRefs.current.get(parentId)?.getBoundingClientRect();
+        if (!p) continue;
+        const x1 = p.left + p.width / 2 - box.left;
+        const y1 = p.bottom - box.top;
+        const x2 = c.left + c.width / 2 - box.left;
+        const y2 = c.top - box.top;
+        const mid = (y1 + y2) / 2;
+        next.push({
+          id: `${child.id}-${parentId}`,
+          d: `M ${x1} ${y1} C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`,
+          strong: child.links.length >= 2,
+          color: parentColorMap.get(parentId) ?? "var(--border)",
+        });
+      }
     };
+    data.inters.forEach((n) => link(n));
+    data.subs.forEach((n) => link(n));
+    setEdges(next);
+  }, [data]);
+
+  useLayoutEffect(() => {
     measure();
     const ro = new ResizeObserver(measure);
     if (wrap.current) ro.observe(wrap.current);
     window.addEventListener("resize", measure);
+    window.addEventListener("beforeprint", measure);
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", measure);
+      window.removeEventListener("beforeprint", measure);
     };
-  }, [data]);
+  }, [measure]);
 
   const rows: { level: Level; lv: (typeof LEVELS)[number]; nodes: Node[]; parents: Node[] }[] = [
     { level: "super", lv: LEVELS[0], nodes: data.supers, parents: [] },
@@ -345,7 +363,7 @@ function NetworkMap({
   );
 
   return (
-    <section className="space-y-4">
+    <section className="goal-network-section space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-lg font-semibold">Your goal network</h3>
         <span className="text-xs text-muted-foreground">
@@ -353,11 +371,14 @@ function NetworkMap({
         </span>
       </div>
 
-      <div ref={wrap} className="relative rounded-2xl border border-border bg-card p-4">
+      <div
+        ref={wrap}
+        className="goal-network-container relative rounded-2xl border border-border bg-card p-4"
+      >
         <svg
-          width={size.w}
-          height={size.h}
-          className="pointer-events-none absolute inset-0"
+          viewBox={`0 0 ${size.w} ${size.h}`}
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
           aria-hidden="true"
         >
           {edges.map((e) => (
@@ -365,8 +386,9 @@ function NetworkMap({
               key={e.id}
               d={e.d}
               fill="none"
-              stroke={e.strong ? "var(--primary)" : "var(--border)"}
-              strokeWidth={e.strong ? 2 : 1.5}
+              stroke={e.color}
+              strokeWidth={2}
+              strokeDasharray={e.strong ? "6 3" : undefined}
               opacity={hover ? (e.id.includes(hover) ? 1 : 0.15) : 0.9}
             />
           ))}
@@ -409,9 +431,9 @@ function NetworkMap({
               )}
 
               <div
-                className="grid gap-4"
+                className="grid justify-center gap-4"
                 style={{
-                  gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${
+                  gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${
                     row.nodes.length <= 1
                       ? 280
                       : row.nodes.length <= 2

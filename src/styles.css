@@ -198,6 +198,16 @@
   .no-print {
     display: none !important;
   }
+
+  .goal-network-section {
+    break-before: page;
+  }
+
+  .goal-network-container {
+    break-inside: avoid;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
 }
 
 @layer base {
