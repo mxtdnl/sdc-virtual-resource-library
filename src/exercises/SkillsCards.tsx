@@ -30,9 +30,20 @@ const CARDS: Card[] = [
       "Tell me about a time you know you were a good communicator. How about a time when you communicated poorly?",
     ],
     activities: [
-      { name: "Coaching Question Cards", note: "Talk through big concepts, explaining them so your ideas land fully." },
-      { name: "'As If' Acting Exercise", note: "How do you change your speaking style depending on context?", slug: "as-if-exercise" },
-      { name: "Objectives and Actions", note: "Identify what you want from communicating, then craft the message.", slug: "actioning-and-objectives" },
+      {
+        name: "Coaching Question Cards",
+        note: "Talk through big concepts, explaining them so your ideas land fully.",
+      },
+      {
+        name: "'As If' Acting Exercise",
+        note: "How do you change your speaking style depending on context?",
+        slug: "as-if-exercise",
+      },
+      {
+        name: "Objectives and Actions",
+        note: "Identify what you want from communicating, then craft the message.",
+        slug: "actioning-and-objectives",
+      },
     ],
   },
   {
@@ -52,8 +63,15 @@ const CARDS: Card[] = [
       "How open are you to changing your long-held beliefs? What would it take?",
     ],
     activities: [
-      { name: "Socratic Questioning", note: "Clarify thoughts, probe the idea, challenge assumptions, follow implications, identify viewpoints, question the question." },
-      { name: "Decision Grid", note: "Evaluate your options when making big or difficult decisions.", slug: "decision-grid" },
+      {
+        name: "Socratic Questioning",
+        note: "Clarify thoughts, probe the idea, challenge assumptions, follow implications, identify viewpoints, question the question.",
+      },
+      {
+        name: "Decision Grid",
+        note: "Evaluate your options when making big or difficult decisions.",
+        slug: "decision-grid",
+      },
     ],
   },
   {
@@ -73,9 +91,19 @@ const CARDS: Card[] = [
       "What role would you want to challenge yourself to try?",
     ],
     activities: [
-      { name: "Shared Identity Activity", note: "Find commonalities with peers to build connection and trust." },
-      { name: "BEAR Feedback Model", note: "Support change that is respectful, clear, and actionable.", slug: "bear-feedback-model" },
-      { name: "'Yes And' Improv Exercise", note: "What changes when someone builds on your idea instead of blocking it?" },
+      {
+        name: "Shared Identity Activity",
+        note: "Find commonalities with peers to build connection and trust.",
+      },
+      {
+        name: "BEAR Feedback Model",
+        note: "Support change that is respectful, clear, and actionable.",
+        slug: "bear-feedback-model",
+      },
+      {
+        name: "'Yes And' Improv Exercise",
+        note: "What changes when someone builds on your idea instead of blocking it?",
+      },
     ],
   },
   {
@@ -94,9 +122,20 @@ const CARDS: Card[] = [
       "What kind of problems or situations make you feel blocked?",
     ],
     activities: [
-      { name: "Idea Generation Quickfire", note: "Make sense of a ridiculous concept and generate new ideas fast.", slug: "idea-generation-quickfire" },
-      { name: "5-D Design Cycle", note: "A multi-step model for thinking through problems and designing solutions." },
-      { name: "6 Thinking Hats", note: "Look at a topic from six distinct perspectives.", slug: "six-thinking-hats" },
+      {
+        name: "Idea Generation Quickfire",
+        note: "Make sense of a ridiculous concept and generate new ideas fast.",
+        slug: "idea-generation-quickfire",
+      },
+      {
+        name: "5-D Design Cycle",
+        note: "A multi-step model for thinking through problems and designing solutions.",
+      },
+      {
+        name: "6 Thinking Hats",
+        note: "Look at a topic from six distinct perspectives.",
+        slug: "six-thinking-hats",
+      },
     ],
   },
   {
@@ -116,7 +155,10 @@ const CARDS: Card[] = [
       "If you had all the time in the world and no restrictions, what would you spend time learning?",
     ],
     activities: [
-      { name: "Metacognition Learning Reflection", note: "Do another activity, then reflect on your learning process using Kolb's Learning Cycle." },
+      {
+        name: "Metacognition Learning Reflection",
+        note: "Do another activity, then reflect on your learning process using Kolb's Learning Cycle.",
+      },
     ],
   },
   {
@@ -161,9 +203,19 @@ const CARDS: Card[] = [
       "What qualities do you most admire about yourself?",
     ],
     activities: [
-      { name: "VIA Character Strengths", note: "Identify your most-used strengths, and figure out how to dial up others." },
-      { name: "The Table of Truth", note: "What unhelpful beliefs do you hold about yourself? How do they hold up to evidence?", slug: "rules-and-assumptions-check" },
-      { name: "Self-Awareness Jenga", note: "Build a Jenga tower while answering self-awareness coaching questions." },
+      {
+        name: "VIA Character Strengths",
+        note: "Identify your most-used strengths, and figure out how to dial up others.",
+      },
+      {
+        name: "The Table of Truth",
+        note: "What unhelpful beliefs do you hold about yourself? How do they hold up to evidence?",
+        slug: "rules-and-assumptions-check",
+      },
+      {
+        name: "Self-Awareness Jenga",
+        note: "Build a Jenga tower while answering self-awareness coaching questions.",
+      },
       { name: "Circle of Control", slug: "circles-of-control" },
     ],
   },
@@ -185,7 +237,11 @@ const CARDS: Card[] = [
     ],
     activities: [
       { name: "Directional Values Exercise", slug: "core-values" },
-      { name: "Ikigai", note: "Reflect on your passions, skills, and motivations.", slug: "ikigai" },
+      {
+        name: "Ikigai",
+        note: "Reflect on your passions, skills, and motivations.",
+        slug: "ikigai",
+      },
       { name: "Meeting Your Future Self", slug: "future-self" },
     ],
   },
@@ -206,7 +262,10 @@ const CARDS: Card[] = [
       "Is it better to be firmly grounded in one culture, or to embody aspects of many?",
     ],
     activities: [
-      { name: "Create a Growth Plan", note: "Four components: engaging with new cultural experience; curiosity over judgement; self-awareness and adaptation; building respect for other ways of thinking." },
+      {
+        name: "Create a Growth Plan",
+        note: "Four components: engaging with new cultural experience; curiosity over judgement; self-awareness and adaptation; building respect for other ways of thinking.",
+      },
     ],
   },
   {
@@ -248,7 +307,10 @@ const CARDS: Card[] = [
       "In your view, how does change happen? Gradually? Event-based?",
     ],
     activities: [
-      { name: "BRIDGES reflection", note: "Bravery, Resourcefulness, Integrity, Discovery, Grit, Emotional Intelligence, Self-Discipline." },
+      {
+        name: "BRIDGES reflection",
+        note: "Bravery, Resourcefulness, Integrity, Discovery, Grit, Emotional Intelligence, Self-Discipline.",
+      },
     ],
   },
   {
@@ -268,7 +330,10 @@ const CARDS: Card[] = [
       "Tell me about a time you took initiative. What are you stopping yourself from doing right now?",
     ],
     activities: [
-      { name: "Mini-Case Studies", note: "A team not working well; an unclear high-stakes assignment; someone often late due to travel; a person frequently tired for unknown reasons. What is your first instinct? What actions should they take?" },
+      {
+        name: "Mini-Case Studies",
+        note: "A team not working well; an unclear high-stakes assignment; someone often late due to travel; a person frequently tired for unknown reasons. What is your first instinct? What actions should they take?",
+      },
     ],
   },
 ];
@@ -299,11 +364,27 @@ export default function SkillsCards() {
   const [flipped, setFlipped] = useState<Record<string, boolean>>({});
   const [top, setTop] = usePersistentState<string[]>("skills-and-mindset-cards", "top", []);
   const [low, setLow] = usePersistentState<string[]>("skills-and-mindset-cards", "low", []);
-  const [why, setWhy] = usePersistentState<Record<string, string>>("skills-and-mindset-cards", "why", {});
-  const [focus, setFocus] = usePersistentState<string | null>("skills-and-mindset-cards", "focus", null);
-  const [answers, setAnswers] = usePersistentState<Record<string, string>>("skills-and-mindset-cards", "answers", {});
+  const [why, setWhy] = usePersistentState<Record<string, string>>(
+    "skills-and-mindset-cards",
+    "why",
+    {},
+  );
+  const [focus, setFocus] = usePersistentState<string | null>(
+    "skills-and-mindset-cards",
+    "focus",
+    null,
+  );
+  const [answers, setAnswers] = usePersistentState<Record<string, string>>(
+    "skills-and-mindset-cards",
+    "answers",
+    {},
+  );
   const [plan, setPlan] = usePersistentState("skills-and-mindset-cards", "plan", "");
-  const [bridge, setBridge] = usePersistentState<Record<string, string>>("skills-and-mindset-cards", "bridge", {});
+  const [bridge, setBridge] = usePersistentState<Record<string, string>>(
+    "skills-and-mindset-cards",
+    "bridge",
+    {},
+  );
 
   const byId = useMemo(() => Object.fromEntries(CARDS.map((c) => [c.id, c])), []);
   const focusCard = focus ? byId[focus] : null;
@@ -477,7 +558,10 @@ export default function SkillsCards() {
           </div>
           {top.map((id) => (
             <div key={id} className="rounded-2xl border p-4" style={cardStyle(byId[id].hue)}>
-              <h3 className="text-sm font-bold uppercase tracking-wide" style={{ color: cardInk(byId[id].hue) }}>
+              <h3
+                className="text-sm font-bold uppercase tracking-wide"
+                style={{ color: cardInk(byId[id].hue) }}
+              >
                 {byId[id].title}
               </h3>
               <TextArea
@@ -498,7 +582,8 @@ export default function SkillsCards() {
           <div className="rounded-2xl border border-border bg-card p-5">
             <h2 className="text-lg font-semibold">Pick one to focus on</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Of the three you want to develop, which one would make the biggest difference right now?
+              Of the three you want to develop, which one would make the biggest difference right
+              now?
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
@@ -509,7 +594,10 @@ export default function SkillsCards() {
                 className={`rounded-2xl border p-4 text-left transition ${focus === id ? "ring-2 ring-primary shadow-lg" : ""}`}
                 style={cardStyle(byId[id].hue)}
               >
-                <h3 className="text-sm font-bold uppercase tracking-wide" style={{ color: cardInk(byId[id].hue) }}>
+                <h3
+                  className="text-sm font-bold uppercase tracking-wide"
+                  style={{ color: cardInk(byId[id].hue) }}
+                >
                   {byId[id].title}
                 </h3>
                 <p className="mt-2 text-sm text-[#33231a]">{byId[id].blurb}</p>
@@ -518,7 +606,9 @@ export default function SkillsCards() {
           </div>
           {low.map((id) => (
             <div key={id} className="rounded-xl border border-border bg-card p-4">
-              <p className="text-sm font-medium">{byId[id].title} — why do you want to develop this?</p>
+              <p className="text-sm font-medium">
+                {byId[id].title} — why do you want to develop this?
+              </p>
               <TextArea
                 rows={2}
                 className="mt-2"
@@ -536,7 +626,9 @@ export default function SkillsCards() {
       {step === "work" && focusCard && (
         <section className="space-y-4">
           <div className="rounded-2xl border p-5" style={cardStyle(focusCard.hue)}>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#6b5040]">Focus card</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#6b5040]">
+              Focus card
+            </p>
             <h2 className="text-xl font-bold" style={{ color: cardInk(focusCard.hue) }}>
               {focusCard.title}
             </h2>
@@ -544,7 +636,9 @@ export default function SkillsCards() {
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
               {focusCard.levels.map((l, i) => (
                 <div key={i} className="rounded-lg bg-white/70 px-3 py-2 text-[11px] leading-snug">
-                  <span className="font-semibold">{["Starting out", "Getting there", "Strong"][i]}: </span>
+                  <span className="font-semibold">
+                    {["Starting out", "Getting there", "Strong"][i]}:{" "}
+                  </span>
                   {l}
                 </div>
               ))}
@@ -552,7 +646,9 @@ export default function SkillsCards() {
           </div>
 
           <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Questions</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Questions
+            </h3>
             {focusCard.questions.map((q) => (
               <div key={q}>
                 <p className="text-sm font-medium">{q}</p>
@@ -567,7 +663,9 @@ export default function SkillsCards() {
           </div>
 
           <div className="rounded-2xl border border-border bg-card p-5">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Activities</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Activities
+            </h3>
             <ul className="mt-3 space-y-2 text-sm">
               {focusCard.activities.map((a) => (
                 <li key={a.name} className="rounded-lg border border-border p-3">
@@ -630,7 +728,9 @@ export default function SkillsCards() {
           <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
             <h2 className="text-xl font-semibold">Your card spread</h2>
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Top 3 strengths</p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Top 3 strengths
+              </p>
               <ul className="mt-2 space-y-2">
                 {top.map((id) => (
                   <li key={id} className="rounded-lg border border-border p-3 text-sm">
@@ -641,12 +741,18 @@ export default function SkillsCards() {
               </ul>
             </div>
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Want to develop</p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Want to develop
+              </p>
               <ul className="mt-2 space-y-2">
                 {low.map((id) => (
                   <li key={id} className="rounded-lg border border-border p-3 text-sm">
                     <span className="font-medium">{byId[id].title}</span>
-                    {id === focus && <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-[11px] text-primary-foreground">Focus</span>}
+                    {id === focus && (
+                      <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-[11px] text-primary-foreground">
+                        Focus
+                      </span>
+                    )}
                     {why[id] && <p className="mt-1 text-muted-foreground">{why[id]}</p>}
                   </li>
                 ))}
@@ -663,7 +769,9 @@ export default function SkillsCards() {
                     .map((q) => (
                       <li key={q} className="rounded-lg border border-border p-3">
                         <p className="font-medium">{q}</p>
-                        <p className="mt-1 text-muted-foreground whitespace-pre-wrap">{answers[q]}</p>
+                        <p className="mt-1 text-muted-foreground whitespace-pre-wrap">
+                          {answers[q]}
+                        </p>
                       </li>
                     ))}
                   {top
@@ -671,7 +779,9 @@ export default function SkillsCards() {
                     .map((id) => (
                       <li key={id} className="rounded-lg border border-border p-3">
                         <p className="font-medium">Using {byId[id].title}</p>
-                        <p className="mt-1 text-muted-foreground whitespace-pre-wrap">{bridge[id]}</p>
+                        <p className="mt-1 text-muted-foreground whitespace-pre-wrap">
+                          {bridge[id]}
+                        </p>
                       </li>
                     ))}
                 </ul>
@@ -686,7 +796,14 @@ export default function SkillsCards() {
           </div>
           <div className="flex gap-3">
             <PrimaryButton onClick={() => window.print()}>Print / Save PDF</PrimaryButton>
-            <GhostButton onClick={() => { setStep("intro"); setTop([]); setLow([]); setFocus(null); }}>
+            <GhostButton
+              onClick={() => {
+                setStep("intro");
+                setTop([]);
+                setLow([]);
+                setFocus(null);
+              }}
+            >
               Start again
             </GhostButton>
           </div>

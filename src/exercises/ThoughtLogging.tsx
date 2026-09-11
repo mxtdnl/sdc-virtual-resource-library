@@ -16,8 +16,14 @@ type Log = {
 
 const empty = (): Log => ({
   id: crypto.randomUUID(),
-  trigger: "", thought: "", emotionBefore: "", evidenceFor: "", evidenceAgainst: "",
-  challenge: "", emotionAfter: "", pattern: "",
+  trigger: "",
+  thought: "",
+  emotionBefore: "",
+  evidenceFor: "",
+  evidenceAgainst: "",
+  challenge: "",
+  emotionAfter: "",
+  pattern: "",
 });
 
 export default function ThoughtLogging() {
@@ -31,7 +37,11 @@ export default function ThoughtLogging() {
     setLogs((ls) => ls.map((l) => (l.id === id ? { ...l, ...patch } : l)));
 
   const remove = (id: string) => setLogs((ls) => ls.filter((l) => l.id !== id));
-  const add = () => { const l = empty(); setLogs((ls) => [...ls, l]); setOpenId(l.id); };
+  const add = () => {
+    const l = empty();
+    setLogs((ls) => [...ls, l]);
+    setOpenId(l.id);
+  };
 
   if (step === "intro") {
     return (
@@ -39,9 +49,22 @@ export default function ThoughtLogging() {
         <IntroGrid
           what="An ongoing tool for tracking and challenging unhelpful thoughts that contribute to stress or anxiety."
           why="Thoughts feel like facts. Externalising them and weighing the evidence builds self-awareness and clearer thinking."
-          how={<ol className="list-decimal pl-4 space-y-1.5"><li>Note a trigger and the automatic thought.</li><li>Rate the emotion, weigh the evidence.</li><li>Reframe and re-rate.</li></ol>}
+          how={
+            <ol className="list-decimal pl-4 space-y-1.5">
+              <li>Note a trigger and the automatic thought.</li>
+              <li>Rate the emotion, weigh the evidence.</li>
+              <li>Reframe and re-rate.</li>
+            </ol>
+          }
         />
-        <PrimaryButton onClick={() => { setStep("logs"); setOpenId(logs[0].id); }}>Start a log →</PrimaryButton>
+        <PrimaryButton
+          onClick={() => {
+            setStep("logs");
+            setOpenId(logs[0].id);
+          }}
+        >
+          Start a log →
+        </PrimaryButton>
       </div>
     );
   }
@@ -50,50 +73,109 @@ export default function ThoughtLogging() {
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="text-2xl font-semibold tracking-tight">Thought logs ({logs.length})</h2>
-        <button onClick={add} className="rounded-md border border-border bg-card px-3 py-1.5 text-sm hover:bg-secondary">+ New log</button>
+        <button
+          onClick={add}
+          className="rounded-md border border-border bg-card px-3 py-1.5 text-sm hover:bg-secondary"
+        >
+          + New log
+        </button>
       </div>
       <div className="space-y-3">
         {logs.map((log, i) => (
           <div key={log.id} className="rounded-xl border border-border bg-card overflow-hidden">
-            <button onClick={() => setOpenId(openId === log.id ? null : log.id)} className="w-full text-left px-5 py-4 flex items-center justify-between hover:bg-secondary/30">
+            <button
+              onClick={() => setOpenId(openId === log.id ? null : log.id)}
+              className="w-full text-left px-5 py-4 flex items-center justify-between hover:bg-secondary/30"
+            >
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">Log {i + 1}</p>
                 <p className="text-sm font-medium truncate">{log.trigger || "Untitled trigger…"}</p>
               </div>
               <div className="flex items-center gap-3">
                 {logs.length > 1 && (
-                  <span onClick={(e) => { e.stopPropagation(); remove(log.id); }} className="text-xs text-muted-foreground hover:text-destructive cursor-pointer">Remove</span>
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      remove(log.id);
+                    }}
+                    className="text-xs text-muted-foreground hover:text-destructive cursor-pointer"
+                  >
+                    Remove
+                  </span>
                 )}
-                <span className="text-muted-foreground text-sm">{openId === log.id ? "−" : "+"}</span>
+                <span className="text-muted-foreground text-sm">
+                  {openId === log.id ? "−" : "+"}
+                </span>
               </div>
             </button>
             {openId === log.id && (
               <div className="border-t border-border p-5 space-y-4">
                 <LogField label="1. Identify a trigger" hint="What happened? Keep it factual.">
-                  <TextArea rows={2} value={log.trigger} onChange={(e) => update(log.id, { trigger: e.target.value })} />
+                  <TextArea
+                    rows={2}
+                    value={log.trigger}
+                    onChange={(e) => update(log.id, { trigger: e.target.value })}
+                  />
                 </LogField>
                 <LogField label="2. Record the thought" hint="The automatic thought that came up.">
-                  <TextArea rows={2} value={log.thought} onChange={(e) => update(log.id, { thought: e.target.value })} />
+                  <TextArea
+                    rows={2}
+                    value={log.thought}
+                    onChange={(e) => update(log.id, { thought: e.target.value })}
+                  />
                 </LogField>
-                <LogField label="3. Note the emotion" hint="Name it and rate intensity, e.g. Anxiety (8/10).">
-                  <TextInput value={log.emotionBefore} onChange={(e) => update(log.id, { emotionBefore: e.target.value })} placeholder="Anxiety (8/10), Shame (6/10)" />
+                <LogField
+                  label="3. Note the emotion"
+                  hint="Name it and rate intensity, e.g. Anxiety (8/10)."
+                >
+                  <TextInput
+                    value={log.emotionBefore}
+                    onChange={(e) => update(log.id, { emotionBefore: e.target.value })}
+                    placeholder="Anxiety (8/10), Shame (6/10)"
+                  />
                 </LogField>
                 <div className="grid gap-3 md:grid-cols-2">
                   <LogField label="4a. Evidence FOR the thought">
-                    <TextArea rows={4} value={log.evidenceFor} onChange={(e) => update(log.id, { evidenceFor: e.target.value })} />
+                    <TextArea
+                      rows={4}
+                      value={log.evidenceFor}
+                      onChange={(e) => update(log.id, { evidenceFor: e.target.value })}
+                    />
                   </LogField>
                   <LogField label="4b. Evidence AGAINST">
-                    <TextArea rows={4} value={log.evidenceAgainst} onChange={(e) => update(log.id, { evidenceAgainst: e.target.value })} />
+                    <TextArea
+                      rows={4}
+                      value={log.evidenceAgainst}
+                      onChange={(e) => update(log.id, { evidenceAgainst: e.target.value })}
+                    />
                   </LogField>
                 </div>
-                <LogField label="5. Challenge / reframe the thought" hint="A more balanced, realistic version.">
-                  <TextArea rows={3} value={log.challenge} onChange={(e) => update(log.id, { challenge: e.target.value })} />
+                <LogField
+                  label="5. Challenge / reframe the thought"
+                  hint="A more balanced, realistic version."
+                >
+                  <TextArea
+                    rows={3}
+                    value={log.challenge}
+                    onChange={(e) => update(log.id, { challenge: e.target.value })}
+                  />
                 </LogField>
                 <LogField label="6. Re-rate the emotion">
-                  <TextInput value={log.emotionAfter} onChange={(e) => update(log.id, { emotionAfter: e.target.value })} placeholder="Anxiety (5/10), Shame (2/10)" />
+                  <TextInput
+                    value={log.emotionAfter}
+                    onChange={(e) => update(log.id, { emotionAfter: e.target.value })}
+                    placeholder="Anxiety (5/10), Shame (2/10)"
+                  />
                 </LogField>
-                <LogField label="7. Pattern reflection" hint="What triggers/thoughts keep coming up across your logs?">
-                  <TextArea rows={3} value={log.pattern} onChange={(e) => update(log.id, { pattern: e.target.value })} />
+                <LogField
+                  label="7. Pattern reflection"
+                  hint="What triggers/thoughts keep coming up across your logs?"
+                >
+                  <TextArea
+                    rows={3}
+                    value={log.pattern}
+                    onChange={(e) => update(log.id, { pattern: e.target.value })}
+                  />
                 </LogField>
               </div>
             )}
@@ -101,14 +183,32 @@ export default function ThoughtLogging() {
         ))}
       </div>
       <div className="flex gap-2 flex-wrap">
-        <button onClick={() => setStep("intro")} className="rounded-md border border-border bg-card px-4 py-2 text-sm hover:bg-secondary">← Intro</button>
-        <button onClick={() => window.print()} className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:opacity-90">Print / Save PDF</button>
+        <button
+          onClick={() => setStep("intro")}
+          className="rounded-md border border-border bg-card px-4 py-2 text-sm hover:bg-secondary"
+        >
+          ← Intro
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:opacity-90"
+        >
+          Print / Save PDF
+        </button>
       </div>
     </div>
   );
 }
 
-function LogField({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function LogField({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <label className="text-sm font-medium">{label}</label>

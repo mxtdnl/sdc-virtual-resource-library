@@ -8,7 +8,10 @@ const CATEGORIES = [
   { name: "Formal education", levels: ["Elementary", "High school", "Post-secondary"] },
   { name: "Ability", levels: ["Significant disability", "Some disability", "Able-bodied"] },
   { name: "Sexuality", levels: ["Lesbian, bi, pan, asexual", "Gay men", "Heterosexual"] },
-  { name: "Neurodiversity", levels: ["Significant neurodivergence", "Neuro-atypical", "Neuro-typical"] },
+  {
+    name: "Neurodiversity",
+    levels: ["Significant neurodivergence", "Neuro-atypical", "Neuro-typical"],
+  },
   { name: "Mental health", levels: ["Vulnerable", "Mostly stable", "Robust"] },
   { name: "Body size", levels: ["Large", "Average", "Slim"] },
   { name: "Housing", levels: ["Homeless", "Sheltered / renting", "Owns property"] },
@@ -20,14 +23,30 @@ const CATEGORIES = [
 const REFLECTIONS = [
   { key: "first", label: "Which aspects of your identity came to mind first? Why?" },
   { key: "daily", label: "How do you notice privilege or power showing up in your daily life?" },
-  { key: "impact", label: "How might your social position affect the kind of impact you can make in different spaces?" },
+  {
+    key: "impact",
+    label:
+      "How might your social position affect the kind of impact you can make in different spaces?",
+  },
   { key: "use", label: "Where could you use your privilege to create space for others?" },
 ] as const;
 
 export default function WheelOfPower() {
-  const [step, setStep] = usePersistentState<"intro" | "map" | "reflect" | "summary">("wheel-of-power-and-privilege", "step", "intro");
-  const [positions, setPositions] = usePersistentState<Record<string, number | null>>("wheel-of-power-and-privilege", "positions", {});
-  const [notes, setNotes] = usePersistentState<Record<string, string>>("wheel-of-power-and-privilege", "notes", {});
+  const [step, setStep] = usePersistentState<"intro" | "map" | "reflect" | "summary">(
+    "wheel-of-power-and-privilege",
+    "step",
+    "intro",
+  );
+  const [positions, setPositions] = usePersistentState<Record<string, number | null>>(
+    "wheel-of-power-and-privilege",
+    "positions",
+    {},
+  );
+  const [notes, setNotes] = usePersistentState<Record<string, string>>(
+    "wheel-of-power-and-privilege",
+    "notes",
+    {},
+  );
 
   return (
     <div className="space-y-8">
@@ -36,9 +55,19 @@ export default function WheelOfPower() {
           <IntroGrid
             what="A reflection on how different parts of your identity carry different degrees of privilege or disadvantage."
             why="Privilege is rarely about blame — it's about awareness. Seeing it helps you navigate diverse spaces and support others responsibly."
-            how={<ol className="list-decimal pl-4 space-y-1.5"><li>For each identity dimension, place yourself in the inner, middle, or outer ring.</li><li>Reflect on what you notice.</li><li>Consider where you can amplify others.</li></ol>}
+            how={
+              <ol className="list-decimal pl-4 space-y-1.5">
+                <li>
+                  For each identity dimension, place yourself in the inner, middle, or outer ring.
+                </li>
+                <li>Reflect on what you notice.</li>
+                <li>Consider where you can amplify others.</li>
+              </ol>
+            }
           />
-          <p className="text-xs text-muted-foreground">Remember: agency matters. You're not a saviour — start by listening.</p>
+          <p className="text-xs text-muted-foreground">
+            Remember: agency matters. You're not a saviour — start by listening.
+          </p>
           <PrimaryButton onClick={() => setStep("map")}>Begin →</PrimaryButton>
         </section>
       )}
@@ -46,7 +75,10 @@ export default function WheelOfPower() {
       {step === "map" && (
         <section className="space-y-6">
           <h2 className="text-2xl font-semibold tracking-tight">Place yourself</h2>
-          <p className="text-sm text-muted-foreground">Inner = closer to societal privilege. Outer = closer to marginalization. Context matters — answer as honestly as feels true to you.</p>
+          <p className="text-sm text-muted-foreground">
+            Inner = closer to societal privilege. Outer = closer to marginalization. Context matters
+            — answer as honestly as feels true to you.
+          </p>
           <div className="space-y-3">
             {CATEGORIES.map((c) => (
               <div key={c.name} className="rounded-xl border border-border bg-card p-4">
@@ -57,9 +89,17 @@ export default function WheelOfPower() {
                     const active = positions[c.name] === ringIdx;
                     const labels = ["Outer · marginalized", "Middle", "Inner · privilege"];
                     return (
-                      <button key={l} onClick={() => setPositions({ ...positions, [c.name]: ringIdx })} className={`rounded-lg border px-3 py-2 text-left text-xs transition ${active ? "bg-primary text-primary-foreground border-primary" : "border-border bg-card hover:bg-secondary"}`}>
+                      <button
+                        key={l}
+                        onClick={() => setPositions({ ...positions, [c.name]: ringIdx })}
+                        className={`rounded-lg border px-3 py-2 text-left text-xs transition ${active ? "bg-primary text-primary-foreground border-primary" : "border-border bg-card hover:bg-secondary"}`}
+                      >
                         <p className="font-semibold">{l}</p>
-                        <p className={`mt-0.5 text-[10px] uppercase tracking-wider ${active ? "opacity-80" : "text-muted-foreground"}`}>{labels[ringIdx]}</p>
+                        <p
+                          className={`mt-0.5 text-[10px] uppercase tracking-wider ${active ? "opacity-80" : "text-muted-foreground"}`}
+                        >
+                          {labels[ringIdx]}
+                        </p>
                       </button>
                     );
                   })}
@@ -80,7 +120,11 @@ export default function WheelOfPower() {
           <div className="space-y-4">
             {REFLECTIONS.map((r) => (
               <Field key={r.key} label={r.label}>
-                <TextArea rows={3} value={notes[r.key] ?? ""} onChange={(e) => setNotes({ ...notes, [r.key]: e.target.value })} />
+                <TextArea
+                  rows={3}
+                  value={notes[r.key] ?? ""}
+                  onChange={(e) => setNotes({ ...notes, [r.key]: e.target.value })}
+                />
               </Field>
             ))}
           </div>
@@ -111,12 +155,17 @@ export default function WheelOfPower() {
             </table>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
-            {REFLECTIONS.map((r) => notes[r.key] && (
-              <div key={r.key} className="rounded-lg border border-border bg-card p-4">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{r.label}</p>
-                <p className="mt-2 text-sm whitespace-pre-wrap">{notes[r.key]}</p>
-              </div>
-            ))}
+            {REFLECTIONS.map(
+              (r) =>
+                notes[r.key] && (
+                  <div key={r.key} className="rounded-lg border border-border bg-card p-4">
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                      {r.label}
+                    </p>
+                    <p className="mt-2 text-sm whitespace-pre-wrap">{notes[r.key]}</p>
+                  </div>
+                ),
+            )}
           </div>
           <div className="flex gap-2 flex-wrap">
             <GhostButton onClick={() => setStep("reflect")}>← Back</GhostButton>

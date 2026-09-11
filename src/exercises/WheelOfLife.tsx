@@ -2,7 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { usePersistentState } from "@/lib/exercise-storage";
 import { Field, GhostButton, IntroGrid, PrimaryButton, TextArea } from "./_shared";
 
-const DEFAULT_AREAS = ["Finances", "Physical Environment", "Personal Growth", "Health", "Career", "Relationships", "Academics", "Fun & Recreation"] as const;
+const DEFAULT_AREAS = [
+  "Finances",
+  "Physical Environment",
+  "Personal Growth",
+  "Health",
+  "Career",
+  "Relationships",
+  "Academics",
+  "Fun & Recreation",
+] as const;
 
 const REFLECTIONS = [
   { key: "balance", label: "How balanced is your wheel?" },
@@ -12,10 +21,22 @@ const REFLECTIONS = [
 ] as const;
 
 export default function WheelOfLife() {
-  const [step, setStep] = usePersistentState<"intro" | "rate" | "summary">("wheel-of-life", "step", "intro");
+  const [step, setStep] = usePersistentState<"intro" | "rate" | "summary">(
+    "wheel-of-life",
+    "step",
+    "intro",
+  );
   const [areas] = useState<string[]>([...DEFAULT_AREAS]);
-  const [scores, setScores] = usePersistentState<Record<string, number>>("wheel-of-life", "scores", () => Object.fromEntries(DEFAULT_AREAS.map((a) => [a, 5])));
-  const [notes, setNotes] = usePersistentState<Record<string, string>>("wheel-of-life", "notes", {});
+  const [scores, setScores] = usePersistentState<Record<string, number>>(
+    "wheel-of-life",
+    "scores",
+    () => Object.fromEntries(DEFAULT_AREAS.map((a) => [a, 5])),
+  );
+  const [notes, setNotes] = usePersistentState<Record<string, string>>(
+    "wheel-of-life",
+    "notes",
+    {},
+  );
 
   return (
     <div className="space-y-8">
@@ -24,7 +45,13 @@ export default function WheelOfLife() {
           <IntroGrid
             what="A visual snapshot of your satisfaction across eight life areas."
             why="Balance matters. The wheel shows where you're thriving and where things need attention."
-            how={<ol className="list-decimal pl-4 space-y-1.5"><li>Drag each dot along its spoke to rate that area.</li><li>Watch your wheel reshape live.</li><li>Reflect and set a small goal.</li></ol>}
+            how={
+              <ol className="list-decimal pl-4 space-y-1.5">
+                <li>Drag each dot along its spoke to rate that area.</li>
+                <li>Watch your wheel reshape live.</li>
+                <li>Reflect and set a small goal.</li>
+              </ol>
+            }
           />
           <PrimaryButton onClick={() => setStep("rate")}>Start →</PrimaryButton>
         </section>
@@ -34,7 +61,9 @@ export default function WheelOfLife() {
         <section className="space-y-6">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight">Drag each dot</h2>
-            <p className="text-sm text-muted-foreground mt-1">Outward = more satisfaction (10). Inward = less (1). The shape morphs as you drag.</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Outward = more satisfaction (10). Inward = less (1). The shape morphs as you drag.
+            </p>
           </div>
           <div className="rounded-xl border border-border bg-card p-4 md:p-6 flex justify-center">
             <DraggableRadar scores={scores} setScores={setScores} categories={areas} />
@@ -43,7 +72,11 @@ export default function WheelOfLife() {
           <div className="space-y-4">
             {REFLECTIONS.map((r) => (
               <Field key={r.key} label={r.label}>
-                <TextArea rows={3} value={notes[r.key] ?? ""} onChange={(e) => setNotes({ ...notes, [r.key]: e.target.value })} />
+                <TextArea
+                  rows={3}
+                  value={notes[r.key] ?? ""}
+                  onChange={(e) => setNotes({ ...notes, [r.key]: e.target.value })}
+                />
               </Field>
             ))}
           </div>
@@ -61,12 +94,17 @@ export default function WheelOfLife() {
             <DraggableRadar scores={scores} setScores={setScores} categories={areas} readOnly />
           </div>
           <div className="grid gap-3 md:grid-cols-2">
-            {REFLECTIONS.map((r) => notes[r.key] && (
-              <div key={r.key} className="rounded-lg border border-border bg-card p-4">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{r.label}</p>
-                <p className="mt-2 text-sm whitespace-pre-wrap">{notes[r.key]}</p>
-              </div>
-            ))}
+            {REFLECTIONS.map(
+              (r) =>
+                notes[r.key] && (
+                  <div key={r.key} className="rounded-lg border border-border bg-card p-4">
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                      {r.label}
+                    </p>
+                    <p className="mt-2 text-sm whitespace-pre-wrap">{notes[r.key]}</p>
+                  </div>
+                ),
+            )}
           </div>
           <div className="flex gap-2 flex-wrap">
             <GhostButton onClick={() => setStep("rate")}>← Back</GhostButton>
@@ -284,14 +322,27 @@ export function DraggableRadar({
         const total = lines.length + (showValues ? 1 : 0);
         const top = y - ((total - 1) * lineHeight) / 2;
         return (
-          <text key={c + "-label"} x={x} textAnchor={side} dominantBaseline="middle" className="fill-foreground" fontSize={11} fontWeight={600}>
+          <text
+            key={c + "-label"}
+            x={x}
+            textAnchor={side}
+            dominantBaseline="middle"
+            className="fill-foreground"
+            fontSize={11}
+            fontWeight={600}
+          >
             {lines.map((line, li) => (
               <tspan key={li} x={x} y={top + li * lineHeight}>
                 {line}
               </tspan>
             ))}
             {showValues && (
-              <tspan x={x} y={top + lines.length * lineHeight} className="fill-muted-foreground" fontWeight={500}>
+              <tspan
+                x={x}
+                y={top + lines.length * lineHeight}
+                className="fill-muted-foreground"
+                fontWeight={500}
+              >
                 {scores[c]}
                 {overlay ? ` · ${overlay.scores[c] ?? 0}` : ""}
               </tspan>

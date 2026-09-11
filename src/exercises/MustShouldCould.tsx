@@ -61,7 +61,9 @@ export default function MustShouldCould() {
               placeholder="Add a task…"
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") add("must"); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") add("must");
+              }}
             />
           </div>
         </div>
@@ -82,7 +84,10 @@ export default function MustShouldCould() {
             <div
               key={b.key}
               onDragOver={(e) => e.preventDefault()}
-              onDrop={() => { if (dragId) move(dragId, b.key); setDragId(null); }}
+              onDrop={() => {
+                if (dragId) move(dragId, b.key);
+                setDragId(null);
+              }}
               className="rounded-2xl border border-border bg-card p-4 min-h-56"
             >
               <div className="flex items-baseline justify-between">
@@ -109,7 +114,9 @@ export default function MustShouldCould() {
                       onChange={() => toggle(t.id)}
                       className="mt-0.5"
                     />
-                    <span className={`flex-1 ${t.done ? "line-through text-muted-foreground" : ""}`}>
+                    <span
+                      className={`flex-1 ${t.done ? "line-through text-muted-foreground" : ""}`}
+                    >
                       {t.text}
                     </span>
                     <button

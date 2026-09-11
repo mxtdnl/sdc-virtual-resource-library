@@ -1,6 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePersistentState } from "@/lib/exercise-storage";
-import { IntroGrid, InfoCard, TextInput, TextArea, GhostButton, PrimaryButton, Field } from "./_shared";
+import {
+  IntroGrid,
+  InfoCard,
+  TextInput,
+  TextArea,
+  GhostButton,
+  PrimaryButton,
+  Field,
+} from "./_shared";
 
 /**
  * Goal Network — build a hierarchy of superordinate (identity/value level),
@@ -32,31 +40,35 @@ type Data = { supers: Node[]; inters: Node[]; subs: Node[] };
 const EMPTY: Data = { supers: [], inters: [], subs: [] };
 
 const newId = () =>
-  typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `id-${Math.random().toString(36).slice(2)}`;
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `id-${Math.random().toString(36).slice(2)}`;
 
-const LEVELS: { key: Level; title: string; kicker: string; blurb: string; placeholder: string }[] = [
-  {
-    key: "super",
-    title: "Superordinate",
-    kicker: "Who you are",
-    blurb: "Big-picture, identity-level. Closer to a value than a goal. No deadline, no metric.",
-    placeholder: "e.g. Be a healthy person",
-  },
-  {
-    key: "inter",
-    title: "Intermediate",
-    kicker: "Which direction",
-    blurb: "Less abstract. A direction of travel that serves one or more of your superordinate goals.",
-    placeholder: "e.g. Sleep better",
-  },
-  {
-    key: "sub",
-    title: "Subordinate",
-    kicker: "What you'll actually do",
-    blurb: "Exactly what you'll do, when, and where. Approach-framed and process-focused.",
-    placeholder: "e.g. Walk 30 min after dinner",
-  },
-];
+const LEVELS: { key: Level; title: string; kicker: string; blurb: string; placeholder: string }[] =
+  [
+    {
+      key: "super",
+      title: "Superordinate",
+      kicker: "Who you are",
+      blurb: "Big-picture, identity-level. Closer to a value than a goal. No deadline, no metric.",
+      placeholder: "e.g. Be a healthy person",
+    },
+    {
+      key: "inter",
+      title: "Intermediate",
+      kicker: "Which direction",
+      blurb:
+        "Less abstract. A direction of travel that serves one or more of your superordinate goals.",
+      placeholder: "e.g. Sleep better",
+    },
+    {
+      key: "sub",
+      title: "Subordinate",
+      kicker: "What you'll actually do",
+      blurb: "Exactly what you'll do, when, and where. Approach-framed and process-focused.",
+      placeholder: "e.g. Walk 30 min after dinner",
+    },
+  ];
 
 const KEY_OF: Record<Level, keyof Data> = { super: "supers", inter: "inters", sub: "subs" };
 
@@ -86,8 +98,10 @@ export default function GoalNetwork() {
         ...d,
         [KEY_OF[level]]: d[KEY_OF[level]].filter((n) => n.id !== id),
       };
-      if (level === "super") next.inters = next.inters.map((n) => ({ ...n, links: n.links.filter((l) => l !== id) }));
-      if (level === "inter") next.subs = next.subs.map((n) => ({ ...n, links: n.links.filter((l) => l !== id) }));
+      if (level === "super")
+        next.inters = next.inters.map((n) => ({ ...n, links: n.links.filter((l) => l !== id) }));
+      if (level === "inter")
+        next.subs = next.subs.map((n) => ({ ...n, links: n.links.filter((l) => l !== id) }));
       return next;
     });
 
@@ -96,7 +110,12 @@ export default function GoalNetwork() {
       ...d,
       [KEY_OF[level]]: d[KEY_OF[level]].map((n) =>
         n.id === id
-          ? { ...n, links: n.links.includes(parentId) ? n.links.filter((l) => l !== parentId) : [...n.links, parentId] }
+          ? {
+              ...n,
+              links: n.links.includes(parentId)
+                ? n.links.filter((l) => l !== parentId)
+                : [...n.links, parentId],
+            }
           : n,
       ),
     }));
@@ -105,7 +124,13 @@ export default function GoalNetwork() {
 
   const exportFile = () => {
     const blob = new Blob(
-      [JSON.stringify({ kind: "goal-network", version: FILE_VERSION, savedAt: new Date().toISOString(), data }, null, 2)],
+      [
+        JSON.stringify(
+          { kind: "goal-network", version: FILE_VERSION, savedAt: new Date().toISOString(), data },
+          null,
+          2,
+        ),
+      ],
       { type: "application/json" },
     );
     const url = URL.createObjectURL(blob);
@@ -120,7 +145,13 @@ export default function GoalNetwork() {
     try {
       const parsed = JSON.parse(await file.text()) as { kind?: string; data?: Data };
       const d = parsed?.data;
-      if (parsed?.kind !== "goal-network" || !d || !Array.isArray(d.supers) || !Array.isArray(d.inters) || !Array.isArray(d.subs)) {
+      if (
+        parsed?.kind !== "goal-network" ||
+        !d ||
+        !Array.isArray(d.supers) ||
+        !Array.isArray(d.inters) ||
+        !Array.isArray(d.subs)
+      ) {
         setImportMsg("That file isn't a saved goal network.");
         return;
       }
@@ -167,12 +198,13 @@ export default function GoalNetwork() {
 
       <div className="grid gap-6 md:grid-cols-2">
         <InfoCard title="Multifinality">
-          One action serving several goals above it. The more links a subordinate goal has, the more reasons you have to
-          do it on a low-motivation day.
+          One action serving several goals above it. The more links a subordinate goal has, the more
+          reasons you have to do it on a low-motivation day.
         </InfoCard>
         <InfoCard title="Make them good goals">
-          Favour approach over avoidance ("eat more veg", not "stop snacking"), process over outcome, mastery over
-          performance — and build in a little planned slack that costs something but isn't failure.
+          Favour approach over avoidance ("eat more veg", not "stop snacking"), process over
+          outcome, mastery over performance — and build in a little planned slack that costs
+          something but isn't failure.
         </InfoCard>
       </div>
 
@@ -188,7 +220,12 @@ export default function GoalNetwork() {
         setOpenId={setOpenId}
       />
 
-      <ImportExport onExport={exportFile} onImport={importFile} message={importMsg} hasData={total > 0} />
+      <ImportExport
+        onExport={exportFile}
+        onImport={importFile}
+        message={importMsg}
+        hasData={total > 0}
+      />
 
       {total > 0 && (
         <div className="no-print flex justify-end">
@@ -288,13 +325,17 @@ function NetworkMap({
   const orphanInters = data.inters.filter((n) => n.links.length === 0).length;
   const orphanSubs = data.subs.filter((n) => n.links.length === 0).length;
   const multifinal = data.subs.filter((n) => n.links.length >= 2);
-  const equifinal = data.supers.filter((s) => data.inters.filter((i) => i.links.includes(s.id)).length >= 2);
+  const equifinal = data.supers.filter(
+    (s) => data.inters.filter((i) => i.links.includes(s.id)).length >= 2,
+  );
 
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-lg font-semibold">Your goal network</h3>
-        <span className="text-xs text-muted-foreground">Lines run from a goal to everything that supports it.</span>
+        <span className="text-xs text-muted-foreground">
+          Lines run from a goal to everything that supports it.
+        </span>
       </div>
 
       <div ref={wrap} className="relative rounded-2xl border border-border bg-card p-4">
@@ -321,7 +362,9 @@ function NetworkMap({
             <div key={row.level} className="space-y-3">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-ink-orange">{row.lv.kicker}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-ink-orange">
+                    {row.lv.kicker}
+                  </p>
                   <p className="text-sm font-semibold">{row.lv.title} goals</p>
                 </div>
                 <span className="text-xs text-muted-foreground">{row.nodes.length} added</span>
@@ -345,7 +388,8 @@ function NetworkMap({
 
               {row.level !== "super" && row.nodes.length > 0 && row.parents.length === 0 && (
                 <p className="text-xs text-muted-foreground">
-                  Add {row.level === "inter" ? "a superordinate" : "an intermediate"} goal above to start linking.
+                  Add {row.level === "inter" ? "a superordinate" : "an intermediate"} goal above to
+                  start linking.
                 </p>
               )}
 
@@ -395,7 +439,10 @@ function NetworkMap({
                               className="text-sm"
                             />
                           </Field>
-                          <Field label="Planned slack" hint="An allowance that costs a little but isn't failure.">
+                          <Field
+                            label="Planned slack"
+                            hint="An allowance that costs a little but isn't failure."
+                          >
                             <TextInput
                               value={n.slack ?? ""}
                               onChange={(e) => update("sub", n.id, { slack: e.target.value })}
@@ -455,24 +502,24 @@ function NetworkMap({
         <InfoCard title="What the map says">
           <ul className="space-y-1.5">
             <li>
-              <strong>{multifinal.length}</strong> action{multifinal.length === 1 ? "" : "s"} serve more than one
-              intermediate goal.
+              <strong>{multifinal.length}</strong> action{multifinal.length === 1 ? "" : "s"} serve
+              more than one intermediate goal.
             </li>
             <li>
-              <strong>{equifinal.length}</strong> superordinate goal{equifinal.length === 1 ? " is" : "s are"} supported
-              more than one way.
+              <strong>{equifinal.length}</strong> superordinate goal
+              {equifinal.length === 1 ? " is" : "s are"} supported more than one way.
             </li>
             {(orphanInters > 0 || orphanSubs > 0) && (
               <li className="text-muted-foreground">
-                {orphanInters + orphanSubs} goal{orphanInters + orphanSubs === 1 ? "" : "s"} not linked to anything
-                above — either link them or let them go.
+                {orphanInters + orphanSubs} goal{orphanInters + orphanSubs === 1 ? "" : "s"} not
+                linked to anything above — either link them or let them go.
               </li>
             )}
           </ul>
         </InfoCard>
         <InfoCard title="Strengthen a link">
-          Pick your least-linked action and ask: what else, higher up, could this already be serving? Writing that link
-          down is what makes it a motivator on a bad day.
+          Pick your least-linked action and ask: what else, higher up, could this already be
+          serving? Writing that link down is what makes it a motivator on a bad day.
         </InfoCard>
       </div>
     </section>
@@ -494,10 +541,12 @@ function ImportExport({
 
   return (
     <section className="no-print rounded-2xl border border-border bg-card p-6 space-y-3">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-ink-orange">Backup and restore</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-ink-orange">
+        Backup and restore
+      </h3>
       <p className="text-sm text-muted-foreground">
-        Your answers are saved on this device only. Download a copy so you can bring your goal network back — on this
-        browser or another one — and carry on editing.
+        Your answers are saved on this device only. Download a copy so you can bring your goal
+        network back — on this browser or another one — and carry on editing.
       </p>
       <div className="flex flex-wrap gap-2">
         <PrimaryButton onClick={onExport} disabled={!hasData}>
@@ -522,7 +571,9 @@ function ImportExport({
           {message}
         </p>
       )}
-      <p className="text-xs text-muted-foreground">Uploading replaces what's currently on screen.</p>
+      <p className="text-xs text-muted-foreground">
+        Uploading replaces what's currently on screen.
+      </p>
     </section>
   );
 }

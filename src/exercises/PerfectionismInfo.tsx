@@ -14,15 +14,42 @@ const AFFIRMATIONS = [
 ];
 
 const BUSTERS = [
-  { title: "Sorting Tasks", body: "Sort tasks into 'must be 100% perfect', '90%', and '80%'. Notice how your mindset shifts when you allow some to be 80%." },
-  { title: "Let It Go!", body: "When you spot a mistake, try saying 'oh well!' instead of holding the anxiety. A radically different thought opens a new perspective." },
-  { title: "Logging Experiences", body: "When something goes wrong, note what you learned. Build a record — errors drive learning." },
-  { title: "The 'Let Them' Mindset", body: "When stuck trying to control others' perceptions, say 'let them'. You'll never control their opinions; this saves energy." },
-  { title: "Learning from Others", body: "Rank people you admire 0–100 on how 'perfect' they are. Why do you demand 100% from yourself but not from them?" },
-  { title: "Emotional Check-In", body: "Ask: what am I feeling, what triggered it, what was I thinking? What could I do instead to cope with this emotion?" },
-  { title: "Sitting with Negative Emotions", body: "Set a 2-minute timer and just let the feelings exist without acting. They are feelings, not necessarily a call to action." },
-  { title: "A New Bad Hobby", body: "Deliberately try something you know you'll be terrible at. What does it feel like to be the opposite of perfect?" },
-  { title: "Converse with your Worries", body: "Complete: 'If I lower my standards then...'. Then what? Is the price you pay for striving too high?" },
+  {
+    title: "Sorting Tasks",
+    body: "Sort tasks into 'must be 100% perfect', '90%', and '80%'. Notice how your mindset shifts when you allow some to be 80%.",
+  },
+  {
+    title: "Let It Go!",
+    body: "When you spot a mistake, try saying 'oh well!' instead of holding the anxiety. A radically different thought opens a new perspective.",
+  },
+  {
+    title: "Logging Experiences",
+    body: "When something goes wrong, note what you learned. Build a record — errors drive learning.",
+  },
+  {
+    title: "The 'Let Them' Mindset",
+    body: "When stuck trying to control others' perceptions, say 'let them'. You'll never control their opinions; this saves energy.",
+  },
+  {
+    title: "Learning from Others",
+    body: "Rank people you admire 0–100 on how 'perfect' they are. Why do you demand 100% from yourself but not from them?",
+  },
+  {
+    title: "Emotional Check-In",
+    body: "Ask: what am I feeling, what triggered it, what was I thinking? What could I do instead to cope with this emotion?",
+  },
+  {
+    title: "Sitting with Negative Emotions",
+    body: "Set a 2-minute timer and just let the feelings exist without acting. They are feelings, not necessarily a call to action.",
+  },
+  {
+    title: "A New Bad Hobby",
+    body: "Deliberately try something you know you'll be terrible at. What does it feel like to be the opposite of perfect?",
+  },
+  {
+    title: "Converse with your Worries",
+    body: "Complete: 'If I lower my standards then...'. Then what? Is the price you pay for striving too high?",
+  },
 ];
 
 const LINKED = [
@@ -51,9 +78,15 @@ export default function PerfectionismInfo() {
       <section className="rounded-xl border border-border bg-card p-6 space-y-3">
         <h2 className="font-semibold">Three flavours of perfectionism</h2>
         <ul className="text-sm space-y-2">
-          <li><strong>Self-oriented</strong> — unrealistic expectations on yourself.</li>
-          <li><strong>Other-oriented</strong> — unrealistic expectations on others.</li>
-          <li><strong>Socially prescribed</strong> — perceiving unrealistic expectations from others.</li>
+          <li>
+            <strong>Self-oriented</strong> — unrealistic expectations on yourself.
+          </li>
+          <li>
+            <strong>Other-oriented</strong> — unrealistic expectations on others.
+          </li>
+          <li>
+            <strong>Socially prescribed</strong> — perceiving unrealistic expectations from others.
+          </li>
         </ul>
       </section>
 
@@ -61,7 +94,12 @@ export default function PerfectionismInfo() {
         <h2 className="font-semibold">Deeper exercises</h2>
         <div className="grid sm:grid-cols-2 gap-2">
           {LINKED.map((l) => (
-            <Link key={l.slug} to="/exercise/$slug" params={{ slug: l.slug }} className="rounded-md border border-border p-3 text-sm hover:bg-secondary">
+            <Link
+              key={l.slug}
+              to="/exercise/$slug"
+              params={{ slug: l.slug }}
+              className="rounded-md border border-border p-3 text-sm hover:bg-secondary"
+            >
               → {l.label}
             </Link>
           ))}
@@ -82,41 +120,68 @@ export default function PerfectionismInfo() {
 
       <section className="rounded-xl border border-border bg-card p-6 space-y-3">
         <h2 className="font-semibold">Affirmations</h2>
-        <p className="text-xs text-muted-foreground">Say them aloud or write them out. Repetition rewires the inner script.</p>
+        <p className="text-xs text-muted-foreground">
+          Say them aloud or write them out. Repetition rewires the inner script.
+        </p>
         <ul className="grid md:grid-cols-2 gap-2 text-sm">
-          {AFFIRMATIONS.map((x) => <li key={x} className="rounded-md border border-border bg-background/40 p-2">{x}</li>)}
+          {AFFIRMATIONS.map((x) => (
+            <li key={x} className="rounded-md border border-border bg-background/40 p-2">
+              {x}
+            </li>
+          ))}
         </ul>
       </section>
 
       <section className="rounded-xl border border-primary/30 bg-primary/5 p-6 space-y-4">
         <h2 className="font-semibold">The Perfectionism Script</h2>
-        <p className="text-sm text-muted-foreground">Fill in the blanks so this script is yours. Keep it on your phone for moments of perfectionism anxiety.</p>
+        <p className="text-sm text-muted-foreground">
+          Fill in the blanks so this script is yours. Keep it on your phone for moments of
+          perfectionism anxiety.
+        </p>
         <p className="text-sm leading-relaxed">
-          It's understandable that I am anxious because I have an old script running in my mind that says I am not really as good as others, or not up to scratch, and so I feel I have to strive all the time. This script has been running all my life because{" "}
+          It's understandable that I am anxious because I have an old script running in my mind that
+          says I am not really as good as others, or not up to scratch, and so I feel I have to
+          strive all the time. This script has been running all my life because{" "}
           <InlineFill value={a} onChange={setA} placeholder="why has it been running?" />.
         </p>
         <p className="text-sm leading-relaxed">
-          Actually what I need to remind myself is that I have achieved a great deal and that what other people say about me is{" "}
+          Actually what I need to remind myself is that I have achieved a great deal and that what
+          other people say about me is{" "}
           <InlineFill value={b} onChange={setB} placeholder="what do they actually say?" />.
         </p>
         <p className="text-sm leading-relaxed">
-          The reason I feel anxious is because I am running an old script, and I need to see it as such. It hasn't been updated with recent and important information such as{" "}
-          <InlineFill value={c} onChange={setC} placeholder="recent evidence" />. I will continue to remind myself that{" "}
-          <InlineFill value={d} onChange={setD} placeholder="the new truth" />.
+          The reason I feel anxious is because I am running an old script, and I need to see it as
+          such. It hasn't been updated with recent and important information such as{" "}
+          <InlineFill value={c} onChange={setC} placeholder="recent evidence" />. I will continue to
+          remind myself that <InlineFill value={d} onChange={setD} placeholder="the new truth" />.
         </p>
       </section>
 
       <section className="rounded-xl border border-border bg-card p-6 space-y-4">
         <h2 className="font-semibold">Reflection</h2>
-        <Field label="What problems does perfectionism cause for you?"><TextArea rows={2} /></Field>
-        <Field label="What do you think your perfectionism is trying to protect you from?"><TextArea rows={2} /></Field>
-        <Field label="How will your life be better if you can be less perfectionistic?"><TextArea rows={2} /></Field>
+        <Field label="What problems does perfectionism cause for you?">
+          <TextArea rows={2} />
+        </Field>
+        <Field label="What do you think your perfectionism is trying to protect you from?">
+          <TextArea rows={2} />
+        </Field>
+        <Field label="How will your life be better if you can be less perfectionistic?">
+          <TextArea rows={2} />
+        </Field>
       </section>
     </div>
   );
 }
 
-function InlineFill({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
+function InlineFill({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+}) {
   return (
     <input
       value={value}

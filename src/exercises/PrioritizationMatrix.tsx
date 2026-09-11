@@ -20,8 +20,19 @@ type Step = "what" | "tasks" | "compare" | "results";
 
 export default function PrioritizationMatrix() {
   const [step, setStep] = usePersistentState<Step>("prioritization-matrix", "step", "what");
-  const [tasks, setTasks] = usePersistentState<string[]>("prioritization-matrix", "tasks", ["", "", "", "", "", ""]);
-  const [choices, setChoices] = usePersistentState<Record<string, number>>("prioritization-matrix", "choices", {});
+  const [tasks, setTasks] = usePersistentState<string[]>("prioritization-matrix", "tasks", [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
+  const [choices, setChoices] = usePersistentState<Record<string, number>>(
+    "prioritization-matrix",
+    "choices",
+    {},
+  );
 
   const validTasks = tasks.map((t) => t.trim()).filter(Boolean);
   const n = validTasks.length;
@@ -92,8 +103,8 @@ export default function PrioritizationMatrix() {
       {step === "what" && (
         <section className="grid gap-6 md:grid-cols-3">
           <Card title="What">
-            A simple way to rank a list of tasks, goals, or options when everything feels
-            important. You compare them two at a time — never more than a pair at once.
+            A simple way to rank a list of tasks, goals, or options when everything feels important.
+            You compare them two at a time — never more than a pair at once.
           </Card>
           <Card title="Why">
             Choosing between two things is much easier than ranking a whole list. Pairwise
@@ -200,26 +211,35 @@ export default function PrioritizationMatrix() {
           </div>
 
           <div className="rounded-lg border border-border bg-card p-4">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Live standings</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+              Live standings
+            </p>
             <div className="mt-3 relative" style={{ height: ranking.length * 40 }}>
               {ranking.map((r, pos) => (
                 <div
                   key={r.idx}
                   className="absolute left-0 right-0 flex items-center gap-3"
-                  style={{ transform: `translateY(${pos * 40}px)`, transition: "transform 320ms cubic-bezier(.2,.8,.3,1)" }}
+                  style={{
+                    transform: `translateY(${pos * 40}px)`,
+                    transition: "transform 320ms cubic-bezier(.2,.8,.3,1)",
+                  }}
                 >
                   <span className="w-6 text-sm tabular-nums text-muted-foreground">{pos + 1}</span>
-                  <span className="w-6 h-6 grid place-items-center rounded bg-secondary font-mono text-xs font-semibold shrink-0">{r.letter}</span>
+                  <span className="w-6 h-6 grid place-items-center rounded bg-secondary font-mono text-xs font-semibold shrink-0">
+                    {r.letter}
+                  </span>
                   <span className="text-sm truncate w-40 md:w-64">{r.task}</span>
                   <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
-                    <div className="h-full bg-primary transition-all duration-300" style={{ width: `${(r.score / Math.max(1, n - 1)) * 100}%` }} />
+                    <div
+                      className="h-full bg-primary transition-all duration-300"
+                      style={{ width: `${(r.score / Math.max(1, n - 1)) * 100}%` }}
+                    />
                   </div>
                   <span className="w-6 text-sm tabular-nums text-right">{r.score}</span>
                 </div>
               ))}
             </div>
           </div>
-
 
           <div className="overflow-x-auto rounded-lg border border-border bg-card">
             <table className="min-w-full border-collapse text-sm">
@@ -253,8 +273,7 @@ export default function PrioritizationMatrix() {
                       if (j >= i) return <td key={j} className="bg-muted/30" />;
                       const k = key(i, j);
                       const winner = choices[k];
-                      const pick = (w: number) =>
-                        setChoices((c) => ({ ...c, [k]: w }));
+                      const pick = (w: number) => setChoices((c) => ({ ...c, [k]: w }));
                       return (
                         <td key={j} className="p-1.5 text-center">
                           <div className="flex flex-col gap-0.5">
@@ -342,7 +361,10 @@ export default function PrioritizationMatrix() {
                 <div className="flex-1 min-w-0">
                   <span className="font-medium block truncate">{r.task}</span>
                   <div className="h-2 rounded-full bg-secondary overflow-hidden mt-1.5">
-                    <div className="h-full bg-primary" style={{ width: `${(r.score / Math.max(1, n - 1)) * 100}%` }} />
+                    <div
+                      className="h-full bg-primary"
+                      style={{ width: `${(r.score / Math.max(1, n - 1)) * 100}%` }}
+                    />
                   </div>
                 </div>
                 <span className="text-sm text-muted-foreground tabular-nums shrink-0">
@@ -351,7 +373,6 @@ export default function PrioritizationMatrix() {
               </li>
             ))}
           </ol>
-
 
           <div className="flex gap-2 flex-wrap">
             <button

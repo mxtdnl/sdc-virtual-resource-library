@@ -38,7 +38,11 @@ const SCENARIOS = [
 export default function AsIfExercise() {
   const [text, setText] = usePersistentState("as-if-exercise", "text", "");
   const [tried, setTried] = usePersistentState<string[]>("as-if-exercise", "tried", []);
-  const [current, setCurrent] = usePersistentState<string | null>("as-if-exercise", "current", null);
+  const [current, setCurrent] = usePersistentState<string | null>(
+    "as-if-exercise",
+    "current",
+    null,
+  );
   const [note, setNote] = usePersistentState("as-if-exercise", "note", "");
 
   const pool = useMemo(() => SCENARIOS.filter((s) => !tried.includes(s)), [tried]);
@@ -64,20 +68,34 @@ export default function AsIfExercise() {
       />
 
       <Field label="Your text" hint="A few sentences from your speech or presentation.">
-        <TextArea rows={6} value={text} onChange={(e) => setText(e.target.value)} placeholder="Paste an excerpt you want to rehearse." />
+        <TextArea
+          rows={6}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Paste an excerpt you want to rehearse."
+        />
       </Field>
 
       <div className="rounded-xl border border-border bg-card p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold">Scenario draw</h3>
-          <span className="text-xs text-muted-foreground">{tried.length} tried · {pool.length} left</span>
+          <span className="text-xs text-muted-foreground">
+            {tried.length} tried · {pool.length} left
+          </span>
         </div>
 
         {current ? (
           <div className="rounded-lg border border-primary/40 bg-primary/5 p-5 space-y-3">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">Deliver your text as if you're...</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              Deliver your text as if you're...
+            </p>
             <p className="text-lg font-medium">{current}</p>
-            <TextArea rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder="What shifted? Tone, pace, body, emotion..." />
+            <TextArea
+              rows={3}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="What shifted? Tone, pace, body, emotion..."
+            />
             <div className="flex gap-2">
               <PrimaryButton onClick={commit}>Done — try another</PrimaryButton>
               <GhostButton onClick={pick}>Skip</GhostButton>
@@ -93,7 +111,9 @@ export default function AsIfExercise() {
           <div>
             <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Tried</h4>
             <ul className="text-sm space-y-1">
-              {tried.map((t) => <li key={t}>✓ {t}</li>)}
+              {tried.map((t) => (
+                <li key={t}>✓ {t}</li>
+              ))}
             </ul>
           </div>
         )}

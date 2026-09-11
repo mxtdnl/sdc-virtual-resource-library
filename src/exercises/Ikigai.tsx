@@ -6,11 +6,36 @@ type Zone = "love" | "good" | "world" | "paid" | "ikigai";
 type Chip = { id: string; text: string; zone: Zone };
 
 const ZONES: Record<Zone, { label: string; sub: string; hint: string; color: string }> = {
-  love: { label: "Love", sub: "Passion", hint: "Activities that make you feel alive.", color: "var(--ink-red)" },
-  good: { label: "Good at", sub: "Vocation", hint: "Your talents and natural strengths.", color: "var(--ink-purple)" },
-  world: { label: "World needs", sub: "Mission", hint: "How you make a positive impact.", color: "var(--ink-brown)" },
-  paid: { label: "Paid for", sub: "Profession", hint: "Where your skills meet a market.", color: "var(--ink-orange)" },
-  ikigai: { label: "Ikigai", sub: "All four meet", hint: "Drag here what sits in all four.", color: "var(--primary)" },
+  love: {
+    label: "Love",
+    sub: "Passion",
+    hint: "Activities that make you feel alive.",
+    color: "var(--ink-red)",
+  },
+  good: {
+    label: "Good at",
+    sub: "Vocation",
+    hint: "Your talents and natural strengths.",
+    color: "var(--ink-purple)",
+  },
+  world: {
+    label: "World needs",
+    sub: "Mission",
+    hint: "How you make a positive impact.",
+    color: "var(--ink-brown)",
+  },
+  paid: {
+    label: "Paid for",
+    sub: "Profession",
+    hint: "Where your skills meet a market.",
+    color: "var(--ink-orange)",
+  },
+  ikigai: {
+    label: "Ikigai",
+    sub: "All four meet",
+    hint: "Drag here what sits in all four.",
+    color: "var(--primary)",
+  },
 };
 
 // Circle layout (viewBox 400x400)
@@ -24,7 +49,11 @@ const R = 105;
 const CENTRE = { cx: 200, cy: 190 };
 
 export default function Ikigai() {
-  const [step, setStep] = usePersistentState<"intro" | "fill" | "summary">("ikigai", "step", "intro");
+  const [step, setStep] = usePersistentState<"intro" | "fill" | "summary">(
+    "ikigai",
+    "step",
+    "intro",
+  );
   const [chips, setChips] = usePersistentState<Chip[]>("ikigai", "chips", []);
   const [draft, setDraft] = usePersistentState("ikigai", "draft", "");
   const [draftZone, setDraftZone] = usePersistentState<Zone>("ikigai", "draftZone", "love");
@@ -37,7 +66,8 @@ export default function Ikigai() {
     setChips((c) => [...c, { id: crypto.randomUUID(), text: t, zone: draftZone }]);
     setDraft("");
   };
-  const move = (id: string, zone: Zone) => setChips((c) => c.map((x) => (x.id === id ? { ...x, zone } : x)));
+  const move = (id: string, zone: Zone) =>
+    setChips((c) => c.map((x) => (x.id === id ? { ...x, zone } : x)));
   const remove = (id: string) => setChips((c) => c.filter((x) => x.id !== id));
 
   return (
@@ -47,7 +77,15 @@ export default function Ikigai() {
           <IntroGrid
             what="A reflection on what you love, what you're good at, what the world needs, and what you can be paid for."
             why="Aligning passion, mission, vocation, and profession gives life meaning — a reason to jump out of bed."
-            how={<ol className="list-decimal pl-4 space-y-1.5"><li>Add short phrases tagged to one of the four circles.</li><li>Drag a phrase into another circle — or the centre — if it fits more than one.</li><li>Phrases in the centre are your Ikigai.</li></ol>}
+            how={
+              <ol className="list-decimal pl-4 space-y-1.5">
+                <li>Add short phrases tagged to one of the four circles.</li>
+                <li>
+                  Drag a phrase into another circle — or the centre — if it fits more than one.
+                </li>
+                <li>Phrases in the centre are your Ikigai.</li>
+              </ol>
+            }
           />
           <PrimaryButton onClick={() => setStep("fill")}>Start →</PrimaryButton>
         </section>
@@ -57,14 +95,30 @@ export default function Ikigai() {
         <section className="space-y-6">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight">Add a phrase, then drag it</h2>
-            <p className="text-sm text-muted-foreground mt-1">Short phrases work best. Drag chips between circles — or into the centre when something belongs to all four.</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Short phrases work best. Drag chips between circles — or into the centre when
+              something belongs to all four.
+            </p>
           </div>
 
           {/* Add input */}
           <div className="rounded-xl border border-border bg-card p-4 flex flex-col md:flex-row gap-2">
-            <TextInput placeholder="e.g. Writing stories" value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && add()} />
-            <select value={draftZone} onChange={(e) => setDraftZone(e.target.value as Zone)} className="rounded-md border border-input bg-card px-3 py-2 text-sm">
-              {(["love", "good", "world", "paid"] as Zone[]).map((z) => <option key={z} value={z}>{ZONES[z].label}</option>)}
+            <TextInput
+              placeholder="e.g. Writing stories"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && add()}
+            />
+            <select
+              value={draftZone}
+              onChange={(e) => setDraftZone(e.target.value as Zone)}
+              className="rounded-md border border-input bg-card px-3 py-2 text-sm"
+            >
+              {(["love", "good", "world", "paid"] as Zone[]).map((z) => (
+                <option key={z} value={z}>
+                  {ZONES[z].label}
+                </option>
+              ))}
             </select>
             <PrimaryButton onClick={add}>Add</PrimaryButton>
           </div>
@@ -97,14 +151,31 @@ export default function Ikigai() {
                   strokeDasharray="4 3"
                   style={{ transition: "all 120ms" }}
                 />
-                <text x={CENTRE.cx} y={CENTRE.cy + 4} textAnchor="middle" fontSize={11} fontWeight={700} className="fill-primary">IKIGAI</text>
+                <text
+                  x={CENTRE.cx}
+                  y={CENTRE.cy + 4}
+                  textAnchor="middle"
+                  fontSize={11}
+                  fontWeight={700}
+                  className="fill-primary"
+                >
+                  IKIGAI
+                </text>
 
                 {/* Outer labels */}
                 <g fontSize={11} fontWeight={700} textAnchor="middle" className="fill-foreground">
-                  <text x={90} y={70}>LOVE</text>
-                  <text x={310} y={70}>WORLD NEEDS</text>
-                  <text x={90} y={340}>GOOD AT</text>
-                  <text x={310} y={340}>PAID FOR</text>
+                  <text x={90} y={70}>
+                    LOVE
+                  </text>
+                  <text x={310} y={70}>
+                    WORLD NEEDS
+                  </text>
+                  <text x={90} y={340}>
+                    GOOD AT
+                  </text>
+                  <text x={310} y={340}>
+                    PAID FOR
+                  </text>
                 </g>
               </svg>
 
@@ -113,17 +184,31 @@ export default function Ikigai() {
                 <DropZone
                   key={z}
                   hover={hoverZone === z}
-                  onDragOver={(e) => { e.preventDefault(); setHoverZone(z); }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setHoverZone(z);
+                  }}
                   onDragLeave={() => setHoverZone((h) => (h === z ? null : h))}
-                  onDrop={() => { if (dragId) move(dragId, z); setDragId(null); setHoverZone(null); }}
+                  onDrop={() => {
+                    if (dragId) move(dragId, z);
+                    setDragId(null);
+                    setHoverZone(null);
+                  }}
                   style={zoneStyle(z as Exclude<Zone, "ikigai">)}
                 />
               ))}
               <DropZone
                 hover={hoverZone === "ikigai"}
-                onDragOver={(e) => { e.preventDefault(); setHoverZone("ikigai"); }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setHoverZone("ikigai");
+                }}
                 onDragLeave={() => setHoverZone((h) => (h === "ikigai" ? null : h))}
-                onDrop={() => { if (dragId) move(dragId, "ikigai"); setDragId(null); setHoverZone(null); }}
+                onDrop={() => {
+                  if (dragId) move(dragId, "ikigai");
+                  setDragId(null);
+                  setHoverZone(null);
+                }}
                 style={centreStyle()}
               />
 
@@ -161,7 +246,10 @@ export default function Ikigai() {
             </div>
           </div>
 
-          <p className="text-xs text-muted-foreground text-center">Tip: drag a chip onto another circle to recategorize, or onto the dashed centre to mark it as your ikigai.</p>
+          <p className="text-xs text-muted-foreground text-center">
+            Tip: drag a chip onto another circle to recategorize, or onto the dashed centre to mark
+            it as your ikigai.
+          </p>
 
           <div className="flex justify-between">
             <GhostButton onClick={() => setStep("intro")}>← Back</GhostButton>
@@ -175,9 +263,17 @@ export default function Ikigai() {
           <h2 className="text-2xl font-semibold tracking-tight">Your ikigai sketch</h2>
           {chips.filter((c) => c.zone === "ikigai").length > 0 && (
             <div className="rounded-xl border-2 border-primary/40 bg-primary/5 p-5">
-              <p className="text-xs uppercase tracking-wider text-primary font-semibold">Ikigai — where all four meet</p>
+              <p className="text-xs uppercase tracking-wider text-primary font-semibold">
+                Ikigai — where all four meet
+              </p>
               <ul className="mt-2 space-y-1">
-                {chips.filter((c) => c.zone === "ikigai").map((c) => <li key={c.id} className="text-base font-medium">• {c.text}</li>)}
+                {chips
+                  .filter((c) => c.zone === "ikigai")
+                  .map((c) => (
+                    <li key={c.id} className="text-base font-medium">
+                      • {c.text}
+                    </li>
+                  ))}
               </ul>
             </div>
           )}
@@ -187,12 +283,23 @@ export default function Ikigai() {
               return (
                 <div key={z} className="rounded-lg border border-border bg-card p-4">
                   <div className="flex items-center gap-2">
-                    <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ background: ZONES[z].color }} />
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{ZONES[z].sub} · {ZONES[z].label}</p>
+                    <span
+                      className="inline-block w-2.5 h-2.5 rounded-full"
+                      style={{ background: ZONES[z].color }}
+                    />
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                      {ZONES[z].sub} · {ZONES[z].label}
+                    </p>
                   </div>
                   <ul className="mt-2 space-y-1">
-                    {items.length === 0 && <li className="text-xs italic text-muted-foreground">—</li>}
-                    {items.map((c) => <li key={c.id} className="text-sm">• {c.text}</li>)}
+                    {items.length === 0 && (
+                      <li className="text-xs italic text-muted-foreground">—</li>
+                    )}
+                    {items.map((c) => (
+                      <li key={c.id} className="text-sm">
+                        • {c.text}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               );
@@ -232,7 +339,19 @@ function centreStyle(): React.CSSProperties {
   };
 }
 
-function DropZone({ hover, style, onDragOver, onDragLeave, onDrop }: { hover: boolean; style: React.CSSProperties; onDragOver: React.DragEventHandler; onDragLeave: React.DragEventHandler; onDrop: React.DragEventHandler }) {
+function DropZone({
+  hover,
+  style,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+}: {
+  hover: boolean;
+  style: React.CSSProperties;
+  onDragOver: React.DragEventHandler;
+  onDragLeave: React.DragEventHandler;
+  onDrop: React.DragEventHandler;
+}) {
   return (
     <div
       style={style}
@@ -244,17 +363,39 @@ function DropZone({ hover, style, onDragOver, onDragLeave, onDrop }: { hover: bo
   );
 }
 
-function ChipEl({ chip, onDragStart, onDragEnd, onRemove }: { chip: Chip; onDragStart: (id: string) => void; onDragEnd: () => void; onRemove: () => void }) {
+function ChipEl({
+  chip,
+  onDragStart,
+  onDragEnd,
+  onRemove,
+}: {
+  chip: Chip;
+  onDragStart: (id: string) => void;
+  onDragEnd: () => void;
+  onRemove: () => void;
+}) {
   return (
     <span
       draggable
-      onDragStart={(e) => { e.dataTransfer.setData("text/plain", chip.id); e.dataTransfer.effectAllowed = "move"; onDragStart(chip.id); }}
+      onDragStart={(e) => {
+        e.dataTransfer.setData("text/plain", chip.id);
+        e.dataTransfer.effectAllowed = "move";
+        onDragStart(chip.id);
+      }}
       onDragEnd={onDragEnd}
       className="inline-flex items-center gap-1 rounded-full bg-card border border-border shadow-sm px-2 py-0.5 text-[11px] cursor-grab active:cursor-grabbing select-none hover:border-primary max-w-[140px]"
       title="Drag onto another circle"
     >
       <span className="truncate">{chip.text}</span>
-      <button onClick={(e) => { e.stopPropagation(); onRemove(); }} className="text-muted-foreground hover:text-destructive">×</button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove();
+        }}
+        className="text-muted-foreground hover:text-destructive"
+      >
+        ×
+      </button>
     </span>
   );
 }

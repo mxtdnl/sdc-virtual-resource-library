@@ -17,8 +17,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Coaching Exercise Library" },
       {
         property: "og:description",
-        content:
-          "Interactive versions of coaching exercises — no printing required.",
+        content: "Interactive versions of coaching exercises — no printing required.",
       },
     ],
   }),
@@ -58,8 +57,8 @@ function LibraryHome() {
             </div>
           </div>
           <p className="text-sm text-muted-foreground mt-2 max-w-2xl">
-            Interactive versions of coaching worksheets. Pick one, work through it
-            online, and get a clear result without printing anything.
+            Interactive versions of coaching worksheets. Pick one, work through it online, and get a
+            clear result without printing anything.
           </p>
         </div>
       </header>
@@ -126,9 +125,7 @@ function LibraryHome() {
                       ~{e.estimatedMinutes} min
                     </span>
                   </div>
-                  <h2 className="mt-3 text-lg font-semibold tracking-tight">
-                    {e.title}
-                  </h2>
+                  <h2 className="mt-3 text-lg font-semibold tracking-tight">{e.title}</h2>
                   <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
                     {e.description}
                   </p>
