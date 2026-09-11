@@ -4,7 +4,7 @@ A virtual resource hub for **coaches working with undergraduate students**. It r
 folder of printable worksheets with a browsable library of interactive coaching exercises
 that students work through on screen and leave with a clear, structured result.
 
-**Live app**: https://coach-spark-space.lovable.app
+**Live app**: mxtdnl.github.io/sdc-virtual-resource-library
 
 Full technical and design specification: [`SPEC.md`](./SPEC.md).
 
