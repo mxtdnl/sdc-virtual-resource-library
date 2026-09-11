@@ -37,6 +37,7 @@ import MustShouldCould from "@/exercises/MustShouldCould";
 import EnhancedTodo from "@/exercises/EnhancedTodo";
 import ActioningObjectives from "@/exercises/ActioningObjectives";
 import SkillsCards from "@/exercises/SkillsCards";
+import GoalNetwork from "@/exercises/GoalNetwork";
 
 
 export type Exercise = {
@@ -50,6 +51,16 @@ export type Exercise = {
 };
 
 export const EXERCISES: Exercise[] = [
+  {
+    slug: "goal-network",
+    title: "Goal Network",
+    description:
+      "Build a hierarchy of superordinate, intermediate and subordinate goals, then link each action to every goal it supports.",
+    category: "Purpose & Direction",
+    tags: ["goals", "planning", "motivation", "behaviour-change"],
+    estimatedMinutes: 25,
+    component: GoalNetwork,
+  },
   {
     slug: "skills-and-mindset-cards",
     title: "Skills & Mindset Cards",
