@@ -34,7 +34,7 @@ export const Route = createFileRoute("/exercise/$slug")({
     <div className="min-h-screen grid place-items-center bg-background text-foreground p-6">
       <div className="text-center space-y-4">
         <h1 className="text-2xl font-semibold">Exercise not found</h1>
-        <Link to="/" className="text-sm text-primary hover:underline">
+        <Link to="/library" className="text-sm text-primary hover:underline">
           ← Back to library
         </Link>
       </div>
@@ -70,7 +70,7 @@ function ExercisePage() {
       <header className="no-print border-b border-border bg-gradient-to-b from-ink-ochre-soft/70 to-card/40 backdrop-blur">
         <div className="mx-auto max-w-5xl px-6 py-5 flex items-center justify-between gap-4">
           <div className="min-w-0">
-            <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">
+            <Link to="/library" className="text-xs text-muted-foreground hover:text-foreground">
               ← Library
             </Link>
             <h1 className="text-lg font-semibold tracking-tight truncate text-ink-red-deep">

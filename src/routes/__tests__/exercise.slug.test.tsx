@@ -28,7 +28,7 @@ describe("exercise page", () => {
     const app = await renderApp("/exercise/ikigai");
 
     await user.click(screen.getByRole("link", { name: /library/i }));
-    await waitFor(() => expect(app.currentPath()).toBe("/"));
+    await waitFor(() => expect(app.currentPath()).toBe("/library"));
   });
 
   it("shows a not-found page for an unknown slug", async () => {
