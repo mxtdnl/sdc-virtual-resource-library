@@ -3,10 +3,30 @@ import { usePersistentState } from "@/lib/exercise-storage";
 import { IntroGrid, TextArea, TextInput, PrimaryButton, GhostButton, Field } from "./_shared";
 
 const VERBS = [
-  "Explain", "Persuade", "Impress", "Invite", "Inspire", "Inform", "Educate",
-  "Coach", "Enlighten", "Direct", "Reassure", "Validate", "Comfort", "Entrust",
-  "Encourage", "Embolden", "Challenge", "Warn", "Amuse", "Provoke", "Soothe",
-  "Urge", "Confide", "Celebrate",
+  "Explain",
+  "Persuade",
+  "Impress",
+  "Invite",
+  "Inspire",
+  "Inform",
+  "Educate",
+  "Coach",
+  "Enlighten",
+  "Direct",
+  "Reassure",
+  "Validate",
+  "Comfort",
+  "Entrust",
+  "Encourage",
+  "Embolden",
+  "Challenge",
+  "Warn",
+  "Amuse",
+  "Provoke",
+  "Soothe",
+  "Urge",
+  "Confide",
+  "Celebrate",
 ];
 
 type Point = { id: string; text: string; verb: string };
@@ -22,8 +42,16 @@ const newSection = (): Section => ({
 export default function ActioningObjectives() {
   const [step, setStep] = usePersistentState("actioning-and-objectives", "step", 0);
   const [overall, setOverall] = usePersistentState("actioning-and-objectives", "overall", "");
-  const [sections, setSections] = usePersistentState<Section[]>("actioning-and-objectives", "sections", [newSection()]);
-  const [rehearsed, setRehearsed] = usePersistentState<Record<string, boolean>>("actioning-and-objectives", "rehearsed", {});
+  const [sections, setSections] = usePersistentState<Section[]>(
+    "actioning-and-objectives",
+    "sections",
+    [newSection()],
+  );
+  const [rehearsed, setRehearsed] = usePersistentState<Record<string, boolean>>(
+    "actioning-and-objectives",
+    "rehearsed",
+    {},
+  );
 
   const updateSection = (id: string, patch: Partial<Section>) =>
     setSections((s) => s.map((x) => (x.id === id ? { ...x, ...patch } : x)));
@@ -38,7 +66,9 @@ export default function ActioningObjectives() {
     const sec = sections.find((s) => s.id === sid);
     if (!sec) return;
     updateSection(sid, {
-      points: sec.points.map((p) => (p.id === pid ? { ...p, verb: p.verb === verb ? "" : verb } : p)),
+      points: sec.points.map((p) =>
+        p.id === pid ? { ...p, verb: p.verb === verb ? "" : verb } : p,
+      ),
     });
   };
   const removePoint = (sid: string, pid: string) => {
@@ -168,7 +198,9 @@ export default function ActioningObjectives() {
       {step === 3 && (
         <div className="space-y-4">
           <div className="rounded-2xl border border-border bg-card p-6">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">Overall objective</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              Overall objective
+            </p>
             <p className="mt-1 font-medium">{overall}</p>
             <p className="mt-3 text-sm text-muted-foreground">
               Run each point out loud, playing the verb fully. Tick it off, then run the whole thing
@@ -247,11 +279,19 @@ function SectionActioning({
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && draft.trim()) { onAddPoint(draft.trim()); setDraft(""); }
+            if (e.key === "Enter" && draft.trim()) {
+              onAddPoint(draft.trim());
+              setDraft("");
+            }
           }}
         />
         <GhostButton
-          onClick={() => { if (draft.trim()) { onAddPoint(draft.trim()); setDraft(""); } }}
+          onClick={() => {
+            if (draft.trim()) {
+              onAddPoint(draft.trim());
+              setDraft("");
+            }
+          }}
           disabled={!draft.trim()}
         >
           Add
@@ -285,7 +325,10 @@ function SectionActioning({
                 {VERBS.map((v) => (
                   <button
                     key={v}
-                    onClick={() => { onSetVerb(p.id, v); setOpenPoint(null); }}
+                    onClick={() => {
+                      onSetVerb(p.id, v);
+                      setOpenPoint(null);
+                    }}
                     className="rounded-full border border-border px-2.5 py-1 text-xs hover:bg-secondary"
                   >
                     {v}

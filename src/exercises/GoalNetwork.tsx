@@ -1,6 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePersistentState } from "@/lib/exercise-storage";
-import { IntroGrid, InfoCard, TextInput, TextArea, GhostButton, PrimaryButton, Field } from "./_shared";
+import {
+  IntroGrid,
+  InfoCard,
+  TextInput,
+  TextArea,
+  GhostButton,
+  PrimaryButton,
+  Field,
+} from "./_shared";
 
 /**
  * Goal Network — build a hierarchy of superordinate (identity/value level),
@@ -32,31 +40,35 @@ type Data = { supers: Node[]; inters: Node[]; subs: Node[] };
 const EMPTY: Data = { supers: [], inters: [], subs: [] };
 
 const newId = () =>
-  typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `id-${Math.random().toString(36).slice(2)}`;
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `id-${Math.random().toString(36).slice(2)}`;
 
-const LEVELS: { key: Level; title: string; kicker: string; blurb: string; placeholder: string }[] = [
-  {
-    key: "super",
-    title: "Superordinate",
-    kicker: "Who you are",
-    blurb: "Big-picture, identity-level. Closer to a value than a goal. No deadline, no metric.",
-    placeholder: "e.g. Be a healthy person",
-  },
-  {
-    key: "inter",
-    title: "Intermediate",
-    kicker: "Which direction",
-    blurb: "Less abstract. A direction of travel that serves one or more of your superordinate goals.",
-    placeholder: "e.g. Sleep better",
-  },
-  {
-    key: "sub",
-    title: "Subordinate",
-    kicker: "What you'll actually do",
-    blurb: "Exactly what you'll do, when, and where. Approach-framed and process-focused.",
-    placeholder: "e.g. Walk 30 min after dinner",
-  },
-];
+const LEVELS: { key: Level; title: string; kicker: string; blurb: string; placeholder: string }[] =
+  [
+    {
+      key: "super",
+      title: "Superordinate",
+      kicker: "Who you are",
+      blurb: "Big-picture, identity-level. Closer to a value than a goal. No deadline, no metric.",
+      placeholder: "e.g. Be a healthy person",
+    },
+    {
+      key: "inter",
+      title: "Intermediate",
+      kicker: "Which direction",
+      blurb:
+        "Less abstract. A direction of travel that serves one or more of your superordinate goals.",
+      placeholder: "e.g. Sleep better",
+    },
+    {
+      key: "sub",
+      title: "Subordinate",
+      kicker: "What you'll actually do",
+      blurb: "Exactly what you'll do, when, and where. Approach-framed and process-focused.",
+      placeholder: "e.g. Walk 30 min after dinner",
+    },
+  ];
 
 const KEY_OF: Record<Level, keyof Data> = { super: "supers", inter: "inters", sub: "subs" };
 
@@ -65,8 +77,6 @@ export default function GoalNetwork() {
   const [drafts, setDrafts] = useState<Record<Level, string>>({ super: "", inter: "", sub: "" });
   const [openId, setOpenId] = useState<string | null>(null);
   const [importMsg, setImportMsg] = useState<string | null>(null);
-
-  const list = (level: Level) => data[KEY_OF[level]];
 
   const add = (level: Level) => {
     const text = drafts[level].trim();
@@ -88,9 +98,10 @@ export default function GoalNetwork() {
         ...d,
         [KEY_OF[level]]: d[KEY_OF[level]].filter((n) => n.id !== id),
       };
-      // Drop links pointing at the deleted node.
-      if (level === "super") next.inters = next.inters.map((n) => ({ ...n, links: n.links.filter((l) => l !== id) }));
-      if (level === "inter") next.subs = next.subs.map((n) => ({ ...n, links: n.links.filter((l) => l !== id) }));
+      if (level === "super")
+        next.inters = next.inters.map((n) => ({ ...n, links: n.links.filter((l) => l !== id) }));
+      if (level === "inter")
+        next.subs = next.subs.map((n) => ({ ...n, links: n.links.filter((l) => l !== id) }));
       return next;
     });
 
@@ -99,7 +110,12 @@ export default function GoalNetwork() {
       ...d,
       [KEY_OF[level]]: d[KEY_OF[level]].map((n) =>
         n.id === id
-          ? { ...n, links: n.links.includes(parentId) ? n.links.filter((l) => l !== parentId) : [...n.links, parentId] }
+          ? {
+              ...n,
+              links: n.links.includes(parentId)
+                ? n.links.filter((l) => l !== parentId)
+                : [...n.links, parentId],
+            }
           : n,
       ),
     }));
@@ -108,7 +124,13 @@ export default function GoalNetwork() {
 
   const exportFile = () => {
     const blob = new Blob(
-      [JSON.stringify({ kind: "goal-network", version: FILE_VERSION, savedAt: new Date().toISOString(), data }, null, 2)],
+      [
+        JSON.stringify(
+          { kind: "goal-network", version: FILE_VERSION, savedAt: new Date().toISOString(), data },
+          null,
+          2,
+        ),
+      ],
       { type: "application/json" },
     );
     const url = URL.createObjectURL(blob);
@@ -123,7 +145,13 @@ export default function GoalNetwork() {
     try {
       const parsed = JSON.parse(await file.text()) as { kind?: string; data?: Data };
       const d = parsed?.data;
-      if (parsed?.kind !== "goal-network" || !d || !Array.isArray(d.supers) || !Array.isArray(d.inters) || !Array.isArray(d.subs)) {
+      if (
+        parsed?.kind !== "goal-network" ||
+        !d ||
+        !Array.isArray(d.supers) ||
+        !Array.isArray(d.inters) ||
+        !Array.isArray(d.subs)
+      ) {
         setImportMsg("That file isn't a saved goal network.");
         return;
       }
@@ -170,140 +198,34 @@ export default function GoalNetwork() {
 
       <div className="grid gap-6 md:grid-cols-2">
         <InfoCard title="Multifinality">
-          One action serving several goals above it. The more links a subordinate goal has, the more reasons you have to
-          do it on a low-motivation day.
+          One action serving several goals above it. The more links a subordinate goal has, the more
+          reasons you have to do it on a low-motivation day.
         </InfoCard>
         <InfoCard title="Make them good goals">
-          Favour approach over avoidance ("eat more veg", not "stop snacking"), process over outcome, mastery over
-          performance — and build in a little planned slack that costs something but isn't failure.
+          Favour approach over avoidance ("eat more veg", not "stop snacking"), process over
+          outcome, mastery over performance — and build in a little planned slack that costs
+          something but isn't failure.
         </InfoCard>
       </div>
 
-      {LEVELS.map((lv) => {
-        const items = list(lv.key);
-        const parents = lv.key === "inter" ? data.supers : lv.key === "sub" ? data.inters : [];
-        return (
-          <section key={lv.key} className="rounded-2xl border border-border bg-card p-6 space-y-4">
-            <header className="flex flex-wrap items-baseline justify-between gap-2">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-ink-orange">{lv.kicker}</p>
-                <h3 className="text-lg font-semibold">{lv.title} goals</h3>
-              </div>
-              <span className="text-xs text-muted-foreground">{items.length} added</span>
-            </header>
-            <p className="text-sm text-muted-foreground">{lv.blurb}</p>
+      <NetworkMap
+        data={data}
+        drafts={drafts}
+        setDrafts={setDrafts}
+        add={add}
+        update={update}
+        remove={remove}
+        toggleLink={toggleLink}
+        openId={openId}
+        setOpenId={setOpenId}
+      />
 
-            <div className="flex flex-wrap gap-2">
-              <TextInput
-                className="flex-1 min-w-56"
-                placeholder={lv.placeholder}
-                value={drafts[lv.key]}
-                onChange={(e) => setDrafts((s) => ({ ...s, [lv.key]: e.target.value }))}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") add(lv.key);
-                }}
-              />
-              <PrimaryButton onClick={() => add(lv.key)} disabled={!drafts[lv.key].trim()}>
-                Add
-              </PrimaryButton>
-            </div>
-
-            {lv.key !== "super" && items.length > 0 && parents.length === 0 && (
-              <p className="text-xs text-muted-foreground">
-                Add {lv.key === "inter" ? "a superordinate" : "an intermediate"} goal above to start linking.
-              </p>
-            )}
-
-            <ul className="space-y-3">
-              {items.map((n) => {
-                const open = openId === n.id;
-                return (
-                  <li key={n.id} className="rounded-xl border border-border bg-background p-3">
-                    <div className="flex items-start gap-2">
-                      <TextInput
-                        value={n.text}
-                        onChange={(e) => update(lv.key, n.id, { text: e.target.value })}
-                        className="flex-1 border-transparent bg-transparent px-1 font-medium"
-                      />
-                      {lv.key === "sub" && (
-                        <button
-                          onClick={() => setOpenId(open ? null : n.id)}
-                          className="rounded-md border border-border px-2 py-1 text-xs hover:bg-secondary"
-                        >
-                          {open ? "Hide detail" : "Detail"}
-                        </button>
-                      )}
-                      <button
-                        onClick={() => remove(lv.key, n.id)}
-                        aria-label="Remove goal"
-                        className="px-1 text-xs text-muted-foreground hover:text-foreground"
-                      >
-                        ✕
-                      </button>
-                    </div>
-
-                    {lv.key === "sub" && open && (
-                      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                        <Field label="When and where" hint="If it's Monday at 7am, then…">
-                          <TextInput
-                            value={n.cue ?? ""}
-                            onChange={(e) => update("sub", n.id, { cue: e.target.value })}
-                            placeholder="Mon/Wed/Fri, 7am, gym by work"
-                          />
-                        </Field>
-                        <Field label="Planned slack" hint="An allowance that costs a little but isn't failure.">
-                          <TextInput
-                            value={n.slack ?? ""}
-                            onChange={(e) => update("sub", n.id, { slack: e.target.value })}
-                            placeholder="Two skipped sessions a month are fine"
-                          />
-                        </Field>
-                      </div>
-                    )}
-
-                    {lv.key !== "super" && parents.length > 0 && (
-                      <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Supports:</span>
-                        {parents.map((p) => {
-                          const on = n.links.includes(p.id);
-                          return (
-                            <button
-                              key={p.id}
-                              onClick={() => toggleLink(lv.key as "inter" | "sub", n.id, p.id)}
-                              aria-pressed={on}
-                              className={`rounded-full border px-3 py-1 text-xs transition-colors ${
-                                on
-                                  ? "border-transparent bg-primary text-primary-foreground"
-                                  : "border-border text-muted-foreground hover:bg-secondary"
-                              }`}
-                            >
-                              {p.text || "Untitled"}
-                            </button>
-                          );
-                        })}
-                        {n.links.length >= 2 && (
-                          <span className="rounded-full bg-ink-ochre-soft px-2 py-0.5 text-[11px] font-medium text-ink-red-deep">
-                            multifinal ×{n.links.length}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-              {items.length === 0 && (
-                <li className="rounded-xl border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
-                  Nothing here yet.
-                </li>
-              )}
-            </ul>
-          </section>
-        );
-      })}
-
-      {total > 0 && <NetworkMap data={data} />}
-
-      <ImportExport onExport={exportFile} onImport={importFile} message={importMsg} hasData={total > 0} />
+      <ImportExport
+        onExport={exportFile}
+        onImport={importFile}
+        message={importMsg}
+        hasData={total > 0}
+      />
 
       {total > 0 && (
         <div className="no-print flex justify-end">
@@ -320,13 +242,31 @@ export default function GoalNetwork() {
 }
 
 /**
- * Three columns of goal cards with curves drawn between linked cards.
- *
- * Positions are measured from the DOM after layout (and on resize) because the
- * cards are ordinary flow content — nothing about the text length is known up
- * front, so the lines have to follow wherever the boxes land.
+ * Vertical goal network with superordinate at top, subordinate at bottom.
+ * Cards are editable inline — add, edit, remove goals and toggle links
+ * directly within the network.
  */
-function NetworkMap({ data }: { data: Data }) {
+function NetworkMap({
+  data,
+  drafts,
+  setDrafts,
+  add,
+  update,
+  remove,
+  toggleLink,
+  openId,
+  setOpenId,
+}: {
+  data: Data;
+  drafts: Record<Level, string>;
+  setDrafts: React.Dispatch<React.SetStateAction<Record<Level, string>>>;
+  add: (level: Level) => void;
+  update: (level: Level, id: string, patch: Partial<Node>) => void;
+  remove: (level: Level, id: string) => void;
+  toggleLink: (level: "inter" | "sub", id: string, parentId: string) => void;
+  openId: string | null;
+  setOpenId: React.Dispatch<React.SetStateAction<string | null>>;
+}) {
   const wrap = useRef<HTMLDivElement | null>(null);
   const nodeRefs = useRef(new Map<string, HTMLElement>());
   const [edges, setEdges] = useState<{ id: string; d: string; strong: boolean }[]>([]);
@@ -344,28 +284,26 @@ function NetworkMap({ data }: { data: Data }) {
       if (!box) return;
       setSize({ w: box.width, h: box.height });
       const next: { id: string; d: string; strong: boolean }[] = [];
-      const link = (child: Node, level: "inter" | "sub") => {
+      const link = (child: Node) => {
         const c = nodeRefs.current.get(child.id)?.getBoundingClientRect();
         if (!c) return;
         for (const parentId of child.links) {
           const p = nodeRefs.current.get(parentId)?.getBoundingClientRect();
           if (!p) continue;
-          // Child column sits to the right of its parent column.
-          const x1 = p.right - box.left;
-          const y1 = p.top + p.height / 2 - box.top;
-          const x2 = c.left - box.left;
-          const y2 = c.top + c.height / 2 - box.top;
-          const mid = (x1 + x2) / 2;
+          const x1 = p.left + p.width / 2 - box.left;
+          const y1 = p.bottom - box.top;
+          const x2 = c.left + c.width / 2 - box.left;
+          const y2 = c.top - box.top;
+          const mid = (y1 + y2) / 2;
           next.push({
             id: `${child.id}-${parentId}`,
-            d: `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`,
+            d: `M ${x1} ${y1} C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`,
             strong: child.links.length >= 2,
           });
         }
-        void level;
       };
-      data.inters.forEach((n) => link(n, "inter"));
-      data.subs.forEach((n) => link(n, "sub"));
+      data.inters.forEach((n) => link(n));
+      data.subs.forEach((n) => link(n));
       setEdges(next);
     };
     measure();
@@ -378,25 +316,29 @@ function NetworkMap({ data }: { data: Data }) {
     };
   }, [data]);
 
-  const columns: { level: Level; label: string; nodes: Node[] }[] = [
-    { level: "super", label: "Superordinate", nodes: data.supers },
-    { level: "inter", label: "Intermediate", nodes: data.inters },
-    { level: "sub", label: "Subordinate", nodes: data.subs },
+  const rows: { level: Level; lv: (typeof LEVELS)[number]; nodes: Node[]; parents: Node[] }[] = [
+    { level: "super", lv: LEVELS[0], nodes: data.supers, parents: [] },
+    { level: "inter", lv: LEVELS[1], nodes: data.inters, parents: data.supers },
+    { level: "sub", lv: LEVELS[2], nodes: data.subs, parents: data.inters },
   ];
 
   const orphanInters = data.inters.filter((n) => n.links.length === 0).length;
   const orphanSubs = data.subs.filter((n) => n.links.length === 0).length;
   const multifinal = data.subs.filter((n) => n.links.length >= 2);
-  const equifinal = data.supers.filter((s) => data.inters.filter((i) => i.links.includes(s.id)).length >= 2);
+  const equifinal = data.supers.filter(
+    (s) => data.inters.filter((i) => i.links.includes(s.id)).length >= 2,
+  );
 
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-lg font-semibold">Your goal network</h3>
-        <span className="text-xs text-muted-foreground">Lines run from a goal to everything that supports it.</span>
+        <span className="text-xs text-muted-foreground">
+          Lines run from a goal to everything that supports it.
+        </span>
       </div>
 
-      <div ref={wrap} className="relative overflow-x-auto rounded-2xl border border-border bg-card p-4">
+      <div ref={wrap} className="relative rounded-2xl border border-border bg-card p-4">
         <svg
           width={size.w}
           height={size.h}
@@ -415,30 +357,142 @@ function NetworkMap({ data }: { data: Data }) {
           ))}
         </svg>
 
-        <div className="relative grid min-w-[640px] grid-cols-3 gap-8">
-          {columns.map((col) => (
-            <div key={col.level} className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{col.label}</p>
-              {col.nodes.map((n) => (
-                <div
-                  key={n.id}
-                  ref={setRef(n.id)}
-                  onMouseEnter={() => setHover(n.id)}
-                  onMouseLeave={() => setHover(null)}
-                  className={`rounded-xl border bg-background px-3 py-2 text-sm ${
-                    n.links && n.links.length >= 2 ? "border-primary/60" : "border-border"
-                  }`}
-                >
-                  <span className="font-medium">{n.text || "Untitled"}</span>
-                  {n.cue && <span className="mt-1 block text-xs text-muted-foreground">{n.cue}</span>}
-                  {n.slack && <span className="mt-0.5 block text-xs text-muted-foreground">Slack: {n.slack}</span>}
+        <div className="relative space-y-10">
+          {rows.map((row) => (
+            <div key={row.level} className="space-y-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-ink-orange">
+                    {row.lv.kicker}
+                  </p>
+                  <p className="text-sm font-semibold">{row.lv.title} goals</p>
                 </div>
-              ))}
-              {col.nodes.length === 0 && (
-                <p className="rounded-xl border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
-                  Empty
+                <span className="text-xs text-muted-foreground">{row.nodes.length} added</span>
+              </div>
+              <p className="text-xs text-muted-foreground">{row.lv.blurb}</p>
+
+              <div className="no-print flex flex-wrap gap-2">
+                <TextInput
+                  className="flex-1 min-w-48 text-sm"
+                  placeholder={row.lv.placeholder}
+                  value={drafts[row.level]}
+                  onChange={(e) => setDrafts((s) => ({ ...s, [row.level]: e.target.value }))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") add(row.level);
+                  }}
+                />
+                <PrimaryButton onClick={() => add(row.level)} disabled={!drafts[row.level].trim()}>
+                  Add
+                </PrimaryButton>
+              </div>
+
+              {row.level !== "super" && row.nodes.length > 0 && row.parents.length === 0 && (
+                <p className="text-xs text-muted-foreground">
+                  Add {row.level === "inter" ? "a superordinate" : "an intermediate"} goal above to
+                  start linking.
                 </p>
               )}
+
+              <div className="flex flex-wrap justify-center gap-4">
+                {row.nodes.map((n) => {
+                  const open = openId === n.id;
+                  return (
+                    <div
+                      key={n.id}
+                      ref={setRef(n.id)}
+                      onMouseEnter={() => setHover(n.id)}
+                      onMouseLeave={() => setHover(null)}
+                      className={`w-full max-w-xs rounded-xl border bg-background p-3 text-sm ${
+                        n.links && n.links.length >= 2 ? "border-primary/60" : "border-border"
+                      }`}
+                    >
+                      <div className="flex items-start gap-2">
+                        <TextInput
+                          value={n.text}
+                          onChange={(e) => update(row.level, n.id, { text: e.target.value })}
+                          className="flex-1 border-transparent bg-transparent px-1 text-sm font-medium"
+                        />
+                        {row.level === "sub" && (
+                          <button
+                            onClick={() => setOpenId(open ? null : n.id)}
+                            className="no-print rounded-md border border-border px-2 py-1 text-xs hover:bg-secondary"
+                          >
+                            {open ? "Hide" : "Detail"}
+                          </button>
+                        )}
+                        <button
+                          onClick={() => remove(row.level, n.id)}
+                          aria-label="Remove goal"
+                          className="no-print px-1 text-xs text-muted-foreground hover:text-foreground"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      {row.level === "sub" && open && (
+                        <div className="mt-3 space-y-2">
+                          <Field label="When and where" hint="If it's Monday at 7am, then…">
+                            <TextInput
+                              value={n.cue ?? ""}
+                              onChange={(e) => update("sub", n.id, { cue: e.target.value })}
+                              placeholder="Mon/Wed/Fri, 7am, gym by work"
+                              className="text-sm"
+                            />
+                          </Field>
+                          <Field
+                            label="Planned slack"
+                            hint="An allowance that costs a little but isn't failure."
+                          >
+                            <TextInput
+                              value={n.slack ?? ""}
+                              onChange={(e) => update("sub", n.id, { slack: e.target.value })}
+                              placeholder="Two skipped sessions a month are fine"
+                              className="text-sm"
+                            />
+                          </Field>
+                        </div>
+                      )}
+
+                      {row.level !== "super" && row.parents.length > 0 && (
+                        <div className="no-print mt-3 flex flex-wrap items-center gap-1.5">
+                          <span className="text-xs text-muted-foreground">Supports:</span>
+                          {row.parents.map((p) => {
+                            const on = n.links.includes(p.id);
+                            return (
+                              <button
+                                key={p.id}
+                                onClick={() => toggleLink(row.level as "inter" | "sub", n.id, p.id)}
+                                aria-pressed={on}
+                                className={`rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
+                                  on
+                                    ? "border-transparent bg-primary text-primary-foreground"
+                                    : "border-border text-muted-foreground hover:bg-secondary"
+                                }`}
+                              >
+                                {p.text || "Untitled"}
+                              </button>
+                            );
+                          })}
+                          {n.links.length >= 2 && (
+                            <span className="rounded-full bg-ink-ochre-soft px-2 py-0.5 text-[11px] font-medium text-ink-red-deep">
+                              multifinal ×{n.links.length}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {row.level === "sub" && !open && n.cue && (
+                        <span className="mt-1 block text-xs text-muted-foreground">{n.cue}</span>
+                      )}
+                    </div>
+                  );
+                })}
+                {row.nodes.length === 0 && (
+                  <p className="w-full rounded-xl border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
+                    Nothing here yet.
+                  </p>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -448,24 +502,24 @@ function NetworkMap({ data }: { data: Data }) {
         <InfoCard title="What the map says">
           <ul className="space-y-1.5">
             <li>
-              <strong>{multifinal.length}</strong> action{multifinal.length === 1 ? "" : "s"} serve more than one
-              intermediate goal.
+              <strong>{multifinal.length}</strong> action{multifinal.length === 1 ? "" : "s"} serve
+              more than one intermediate goal.
             </li>
             <li>
-              <strong>{equifinal.length}</strong> superordinate goal{equifinal.length === 1 ? " is" : "s are"} supported
-              more than one way.
+              <strong>{equifinal.length}</strong> superordinate goal
+              {equifinal.length === 1 ? " is" : "s are"} supported more than one way.
             </li>
             {(orphanInters > 0 || orphanSubs > 0) && (
               <li className="text-muted-foreground">
-                {orphanInters + orphanSubs} goal{orphanInters + orphanSubs === 1 ? "" : "s"} not linked to anything
-                above — either link them or let them go.
+                {orphanInters + orphanSubs} goal{orphanInters + orphanSubs === 1 ? "" : "s"} not
+                linked to anything above — either link them or let them go.
               </li>
             )}
           </ul>
         </InfoCard>
         <InfoCard title="Strengthen a link">
-          Pick your least-linked action and ask: what else, higher up, could this already be serving? Writing that link
-          down is what makes it a motivator on a bad day.
+          Pick your least-linked action and ask: what else, higher up, could this already be
+          serving? Writing that link down is what makes it a motivator on a bad day.
         </InfoCard>
       </div>
     </section>
@@ -487,10 +541,12 @@ function ImportExport({
 
   return (
     <section className="no-print rounded-2xl border border-border bg-card p-6 space-y-3">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-ink-orange">Backup and restore</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-ink-orange">
+        Backup and restore
+      </h3>
       <p className="text-sm text-muted-foreground">
-        Your answers are saved on this device only. Download a copy so you can bring your goal network back — on this
-        browser or another one — and carry on editing.
+        Your answers are saved on this device only. Download a copy so you can bring your goal
+        network back — on this browser or another one — and carry on editing.
       </p>
       <div className="flex flex-wrap gap-2">
         <PrimaryButton onClick={onExport} disabled={!hasData}>
@@ -515,7 +571,9 @@ function ImportExport({
           {message}
         </p>
       )}
-      <p className="text-xs text-muted-foreground">Uploading replaces what's currently on screen.</p>
+      <p className="text-xs text-muted-foreground">
+        Uploading replaces what's currently on screen.
+      </p>
     </section>
   );
 }

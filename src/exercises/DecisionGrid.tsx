@@ -9,15 +9,21 @@ type Zone = `${Option}_${Time}_${Valence}` | "tray";
 
 type Item = { id: string; text: string; zone: Zone };
 
-const ZONES: { key: Exclude<Zone, "tray">; option: Option; time: Time; valence: Valence; label: string }[] = [
+const ZONES: {
+  key: Exclude<Zone, "tray">;
+  option: Option;
+  time: Time;
+  valence: Valence;
+  label: string;
+}[] = [
   { key: "yes_im_b", option: "yes", time: "im", valence: "b", label: "Benefits now" },
   { key: "yes_im_c", option: "yes", time: "im", valence: "c", label: "Costs now" },
   { key: "yes_lt_b", option: "yes", time: "lt", valence: "b", label: "Benefits long-term" },
   { key: "yes_lt_c", option: "yes", time: "lt", valence: "c", label: "Costs long-term" },
-  { key: "no_im_b",  option: "no",  time: "im", valence: "b", label: "Benefits now" },
-  { key: "no_im_c",  option: "no",  time: "im", valence: "c", label: "Costs now" },
-  { key: "no_lt_b",  option: "no",  time: "lt", valence: "b", label: "Benefits long-term" },
-  { key: "no_lt_c",  option: "no",  time: "lt", valence: "c", label: "Costs long-term" },
+  { key: "no_im_b", option: "no", time: "im", valence: "b", label: "Benefits now" },
+  { key: "no_im_c", option: "no", time: "im", valence: "c", label: "Costs now" },
+  { key: "no_lt_b", option: "no", time: "lt", valence: "b", label: "Benefits long-term" },
+  { key: "no_lt_c", option: "no", time: "lt", valence: "c", label: "Costs long-term" },
 ];
 
 export default function DecisionGrid() {
@@ -33,23 +39,38 @@ export default function DecisionGrid() {
     setDraft("");
   };
   const remove = (id: string) => setItems((xs) => xs.filter((x) => x.id !== id));
-  const moveTo = (id: string, zone: Zone) => setItems((xs) => xs.map((x) => (x.id === id ? { ...x, zone } : x)));
+  const moveTo = (id: string, zone: Zone) =>
+    setItems((xs) => xs.map((x) => (x.id === id ? { ...x, zone } : x)));
 
   const byZone = useMemo(() => {
-    const m: Record<Zone, Item[]> = { tray: [], yes_im_b: [], yes_im_c: [], yes_lt_b: [], yes_lt_c: [], no_im_b: [], no_im_c: [], no_lt_b: [], no_lt_c: [] };
+    const m: Record<Zone, Item[]> = {
+      tray: [],
+      yes_im_b: [],
+      yes_im_c: [],
+      yes_lt_b: [],
+      yes_lt_c: [],
+      no_im_b: [],
+      no_im_c: [],
+      no_lt_b: [],
+      no_lt_c: [],
+    };
     items.forEach((it) => m[it.zone].push(it));
     return m;
   }, [items]);
 
   const tally = (option: Option, valence: Valence) =>
-    ZONES.filter((z) => z.option === option && z.valence === valence).reduce((n, z) => n + byZone[z.key].length, 0);
+    ZONES.filter((z) => z.option === option && z.valence === valence).reduce(
+      (n, z) => n + byZone[z.key].length,
+      0,
+    );
 
   const Grid = ({ option, title, tone }: { option: Option; title: string; tone: string }) => (
     <div className={`rounded-2xl border p-5 ${tone}`}>
       <div className="flex items-baseline justify-between mb-3">
         <h3 className="text-sm font-semibold">{title}</h3>
         <span className="text-xs text-muted-foreground tabular-nums">
-          <span className="text-foreground font-medium">{tally(option, "b")}</span> benefits · <span className="text-foreground font-medium">{tally(option, "c")}</span> costs
+          <span className="text-foreground font-medium">{tally(option, "b")}</span> benefits ·{" "}
+          <span className="text-foreground font-medium">{tally(option, "c")}</span> costs
         </span>
       </div>
       <div className="grid grid-cols-[auto_1fr_1fr] gap-2 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
@@ -90,26 +111,49 @@ export default function DecisionGrid() {
 
       <div>
         <label className="text-sm font-medium">What are you trying to decide?</label>
-        <TextInput value={decision} onChange={(e) => setDecision(e.target.value)} placeholder="e.g. Should I switch majors?" className="mt-2" />
+        <TextInput
+          value={decision}
+          onChange={(e) => setDecision(e.target.value)}
+          placeholder="e.g. Should I switch majors?"
+          className="mt-2"
+        />
       </div>
 
       <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
         <div className="flex gap-2">
-          <TextInput value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && add()} placeholder="Add a factor — e.g. 'lose income for 6 months'" />
+          <TextInput
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && add()}
+            placeholder="Add a factor — e.g. 'lose income for 6 months'"
+          />
           <PrimaryButton onClick={add}>Add</PrimaryButton>
         </div>
         <div
           onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => { e.preventDefault(); if (dragId) moveTo(dragId, "tray"); }}
+          onDrop={(e) => {
+            e.preventDefault();
+            if (dragId) moveTo(dragId, "tray");
+          }}
           className="min-h-[56px] rounded-xl border border-dashed border-border p-3"
         >
-          <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-2">Unsorted</p>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-2">
+            Unsorted
+          </p>
           {byZone.tray.length === 0 ? (
-            <p className="text-xs text-muted-foreground">Add factors above — then drag them into a quadrant.</p>
+            <p className="text-xs text-muted-foreground">
+              Add factors above — then drag them into a quadrant.
+            </p>
           ) : (
             <div className="flex flex-wrap gap-1.5">
               {byZone.tray.map((it) => (
-                <Chip key={it.id} item={it} setDragId={setDragId} dragId={dragId} onRemove={remove} />
+                <Chip
+                  key={it.id}
+                  item={it}
+                  setDragId={setDragId}
+                  dragId={dragId}
+                  onRemove={remove}
+                />
               ))}
             </div>
           )}
@@ -122,13 +166,24 @@ export default function DecisionGrid() {
       </div>
 
       <div className="rounded-xl border border-primary/30 bg-primary/5 p-5 text-sm text-muted-foreground">
-        Tip: don't decide today. Come back tomorrow with a fresh head — new costs or benefits often appear.
+        Tip: don't decide today. Come back tomorrow with a fresh head — new costs or benefits often
+        appear.
       </div>
     </div>
   );
 }
 
-function Chip({ item, setDragId, dragId, onRemove }: { item: Item; setDragId: (id: string | null) => void; dragId: string | null; onRemove: (id: string) => void }) {
+function Chip({
+  item,
+  setDragId,
+  dragId,
+  onRemove,
+}: {
+  item: Item;
+  setDragId: (id: string | null) => void;
+  dragId: string | null;
+  onRemove: (id: string) => void;
+}) {
   const dragging = dragId === item.id;
   return (
     <span
@@ -138,19 +193,49 @@ function Chip({ item, setDragId, dragId, onRemove }: { item: Item; setDragId: (i
       className={`group inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium cursor-grab ${dragging ? "opacity-40" : ""}`}
     >
       {item.text}
-      <button onClick={() => onRemove(item.id)} className="opacity-50 hover:opacity-100" aria-label="remove">×</button>
+      <button
+        onClick={() => onRemove(item.id)}
+        className="opacity-50 hover:opacity-100"
+        aria-label="remove"
+      >
+        ×
+      </button>
     </span>
   );
 }
 
-function DropCell({ zone, items, onDrop, setDragId, dragId, onRemove, accent }: { zone: Zone; items: Item[]; onDrop: (id: string) => void; setDragId: (id: string | null) => void; dragId: string | null; onRemove: (id: string) => void; accent: "primary" | "destructive" }) {
+function DropCell({
+  zone,
+  items,
+  onDrop,
+  setDragId,
+  dragId,
+  onRemove,
+  accent,
+}: {
+  zone: Zone;
+  items: Item[];
+  onDrop: (id: string) => void;
+  setDragId: (id: string | null) => void;
+  dragId: string | null;
+  onRemove: (id: string) => void;
+  accent: "primary" | "destructive";
+}) {
   const [over, setOver] = useState(false);
   const accentCls = accent === "primary" ? "border-primary/40" : "border-destructive/40";
   return (
     <div
-      onDragOver={(e) => { e.preventDefault(); setOver(true); }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setOver(true);
+      }}
       onDragLeave={() => setOver(false)}
-      onDrop={(e) => { e.preventDefault(); setOver(false); const id = dragId; if (id) onDrop(id); }}
+      onDrop={(e) => {
+        e.preventDefault();
+        setOver(false);
+        const id = dragId;
+        if (id) onDrop(id);
+      }}
       className={`rounded-lg border-2 border-dashed p-2 min-h-[88px] transition-colors ${accentCls} ${over ? (accent === "primary" ? "bg-primary/10" : "bg-destructive/10") : "bg-background/40"}`}
     >
       {items.length === 0 ? (

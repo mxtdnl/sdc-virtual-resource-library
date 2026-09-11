@@ -44,7 +44,9 @@ export const Route = createFileRoute("/exercise/$slug")({
     <div className="min-h-screen grid place-items-center bg-background text-foreground p-6">
       <div className="text-center space-y-4">
         <h1 className="text-2xl font-semibold">Something went wrong</h1>
-        <p className="text-sm text-muted-foreground">{error instanceof Error ? error.message : "An unexpected error occurred"}</p>
+        <p className="text-sm text-muted-foreground">
+          {error instanceof Error ? error.message : "An unexpected error occurred"}
+        </p>
         <button
           onClick={reset}
           className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground"
@@ -71,7 +73,9 @@ function ExercisePage() {
             <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">
               ← Library
             </Link>
-            <h1 className="text-lg font-semibold tracking-tight truncate text-ink-red-deep">{exercise.title}</h1>
+            <h1 className="text-lg font-semibold tracking-tight truncate text-ink-red-deep">
+              {exercise.title}
+            </h1>
           </div>
           <div className="flex items-center gap-3">
             <span className="hidden text-xs text-muted-foreground whitespace-nowrap sm:inline">

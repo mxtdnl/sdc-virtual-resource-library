@@ -26,13 +26,24 @@ const parseMins = (s: string) => {
 export default function EnhancedTodo() {
   const [period, setPeriod] = usePersistentState("enhanced-to-do-list", "period", "");
   const [rows, setRows] = usePersistentState<Row[]>("enhanced-to-do-list", "rows", []);
-  const [draft, setDraft] = usePersistentState("enhanced-to-do-list", "draft", { priority: "A" as Priority, task: "", estimate: "" });
+  const [draft, setDraft] = usePersistentState("enhanced-to-do-list", "draft", {
+    priority: "A" as Priority,
+    task: "",
+    estimate: "",
+  });
 
   const add = () => {
     if (!draft.task.trim()) return;
     setRows((r) => [
       ...r,
-      { id: crypto.randomUUID(), priority: draft.priority, task: draft.task.trim(), estimate: draft.estimate.trim(), actual: "", done: false },
+      {
+        id: crypto.randomUUID(),
+        priority: draft.priority,
+        task: draft.task.trim(),
+        estimate: draft.estimate.trim(),
+        actual: "",
+        done: false,
+      },
     ]);
     setDraft({ priority: draft.priority, task: "", estimate: "" });
   };
@@ -41,15 +52,15 @@ export default function EnhancedTodo() {
   const remove = (id: string) => setRows((r) => r.filter((x) => x.id !== id));
 
   const sorted = [...rows].sort(
-    (a, b) => PRIORITIES.indexOf(a.priority) - PRIORITIES.indexOf(b.priority)
+    (a, b) => PRIORITIES.indexOf(a.priority) - PRIORITIES.indexOf(b.priority),
   );
 
   const totalEst = rows.reduce((s, r) => s + (parseMins(r.estimate) ?? 0), 0);
   const compared = rows.filter((r) => parseMins(r.estimate) && parseMins(r.actual));
   const drift = compared.length
     ? Math.round(
-        (compared.reduce((s, r) => s + (parseMins(r.actual)! - parseMins(r.estimate)!), 0) /
-          compared.length)
+        compared.reduce((s, r) => s + (parseMins(r.actual)! - parseMins(r.estimate)!), 0) /
+          compared.length,
       )
     : null;
 
@@ -99,14 +110,18 @@ export default function EnhancedTodo() {
             placeholder="Single task, not a whole project"
             value={draft.task}
             onChange={(e) => setDraft((d) => ({ ...d, task: e.target.value }))}
-            onKeyDown={(e) => { if (e.key === "Enter") add(); }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") add();
+            }}
           />
           <TextInput
             placeholder="Est. e.g. 45m"
             value={draft.estimate}
             onChange={(e) => setDraft((d) => ({ ...d, estimate: e.target.value }))}
           />
-          <PrimaryButton onClick={add} disabled={!draft.task.trim()}>Add</PrimaryButton>
+          <PrimaryButton onClick={add} disabled={!draft.task.trim()}>
+            Add
+          </PrimaryButton>
         </div>
         <p className="text-xs text-muted-foreground">A is the highest priority, D the lowest.</p>
       </div>
@@ -130,7 +145,10 @@ export default function EnhancedTodo() {
                   <td className="px-4 py-2">
                     <span
                       className="inline-grid h-7 w-7 place-items-center rounded-full text-xs font-semibold text-primary-foreground"
-                      style={{ background: "var(--primary)", opacity: PRIORITY_OPACITY[r.priority] }}
+                      style={{
+                        background: "var(--primary)",
+                        opacity: PRIORITY_OPACITY[r.priority],
+                      }}
                     >
                       {r.priority}
                     </span>
@@ -171,8 +189,14 @@ export default function EnhancedTodo() {
 
       {rows.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-3">
-          <Stat label="Tasks" value={`${rows.filter((r) => r.done).length} / ${rows.length} done`} />
-          <Stat label="Estimated time" value={totalEst ? `${Math.round(totalEst / 6) / 10} h` : "—"} />
+          <Stat
+            label="Tasks"
+            value={`${rows.filter((r) => r.done).length} / ${rows.length} done`}
+          />
+          <Stat
+            label="Estimated time"
+            value={totalEst ? `${Math.round(totalEst / 6) / 10} h` : "—"}
+          />
           <Stat
             label="Estimate accuracy"
             value={
