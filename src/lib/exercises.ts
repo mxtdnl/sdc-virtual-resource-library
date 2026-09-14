@@ -38,6 +38,7 @@ import EnhancedTodo from "@/exercises/EnhancedTodo";
 import ActioningObjectives from "@/exercises/ActioningObjectives";
 import SkillsCards from "@/exercises/SkillsCards";
 import GoalNetwork from "@/exercises/GoalNetwork";
+import LeadingLaggingIndicators from "@/exercises/LeadingLaggingIndicators";
 
 export type Exercise = {
   slug: string;
@@ -59,6 +60,16 @@ export const EXERCISES: Exercise[] = [
     tags: ["goals", "planning", "motivation", "behaviour-change"],
     estimatedMinutes: 25,
     component: GoalNetwork,
+  },
+  {
+    slug: "leading-lagging-indicators",
+    title: "Leading & Lagging Indicators",
+    description:
+      "Map the actions you control (leading) to the outcomes you want (lagging) — and find your highest-leverage habits.",
+    category: "Purpose & Direction",
+    tags: ["goals", "planning", "measurement", "behaviour-change", "accountability"],
+    estimatedMinutes: 20,
+    component: LeadingLaggingIndicators,
   },
   {
     slug: "skills-and-mindset-cards",

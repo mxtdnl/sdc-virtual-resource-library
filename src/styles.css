@@ -208,6 +208,16 @@
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
+
+  .indicator-network-section {
+    break-before: page;
+  }
+
+  .indicator-network-container {
+    break-inside: avoid;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
 }
 
 @layer base {
