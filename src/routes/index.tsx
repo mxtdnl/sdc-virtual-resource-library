@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
 
 function BauhausIllustration() {
   return (
-    <svg viewBox="0 0 800 500" className="w-full h-auto" aria-hidden="true" role="img">
+    <svg viewBox="0 0 800 500" className="w-full h-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true" role="img">
       {/* Large ochre circle — bottom right */}
       <circle cx="620" cy="340" r="180" className="fill-ink-ochre/20" />
       {/* Red rectangle — left, angled */}
@@ -109,12 +109,12 @@ function LandingPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border overflow-hidden bg-card/40">
-          <BauhausIllustration />
-        </div>
-
-        <div className="py-12 sm:py-16 grid gap-10 sm:grid-cols-2">
-          <div>
+        <div className="relative rounded-2xl border border-border overflow-hidden bg-card/40">
+          <div className="absolute inset-0">
+            <BauhausIllustration />
+          </div>
+          <div className="relative py-12 sm:py-16 px-8 sm:px-10 grid gap-10 sm:grid-cols-2">
+          <div className="rounded-xl bg-background/80 backdrop-blur-sm p-6">
             <h2 className="text-xs uppercase tracking-wider text-ink-orange font-semibold">
               How it works
             </h2>
@@ -140,7 +140,7 @@ function LandingPage() {
             </ol>
           </div>
 
-          <div>
+          <div className="rounded-xl bg-background/80 backdrop-blur-sm p-6">
             <h2 className="text-xs uppercase tracking-wider text-ink-orange font-semibold">
               Why it's different
             </h2>
@@ -166,6 +166,7 @@ function LandingPage() {
                 <span>Works on any device with a browser — phone, tablet, or laptop</span>
               </li>
             </ul>
+          </div>
           </div>
         </div>
 
