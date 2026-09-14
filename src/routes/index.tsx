@@ -23,7 +23,13 @@ export const Route = createFileRoute("/")({
 
 function BauhausIllustration() {
   return (
-    <svg viewBox="0 0 800 500" className="w-full h-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true" role="img">
+    <svg
+      viewBox="0 0 800 500"
+      className="w-full h-full"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+      role="img"
+    >
       {/* Large ochre circle — bottom right */}
       <circle cx="620" cy="340" r="180" className="fill-ink-ochre/20" />
       {/* Red rectangle — left, angled */}
@@ -114,59 +120,59 @@ function LandingPage() {
             <BauhausIllustration />
           </div>
           <div className="relative py-12 sm:py-16 px-8 sm:px-10 grid gap-10 sm:grid-cols-2">
-          <div className="rounded-xl bg-background/80 backdrop-blur-sm p-6">
-            <h2 className="text-xs uppercase tracking-wider text-ink-orange font-semibold">
-              How it works
-            </h2>
-            <ol className="mt-4 space-y-3 text-sm leading-relaxed">
-              <li className="flex gap-3">
-                <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
-                  1
-                </span>
-                <span>Browse by category or search for a topic</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
-                  2
-                </span>
-                <span>The student works through the exercise on screen</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
-                  3
-                </span>
-                <span>A structured summary is generated — ready to print or save as PDF</span>
-              </li>
-            </ol>
-          </div>
+            <div className="rounded-xl bg-background/80 backdrop-blur-sm p-6">
+              <h2 className="text-xs uppercase tracking-wider text-ink-orange font-semibold">
+                How it works
+              </h2>
+              <ol className="mt-4 space-y-3 text-sm leading-relaxed">
+                <li className="flex gap-3">
+                  <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
+                    1
+                  </span>
+                  <span>Browse by category or search for a topic</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
+                    2
+                  </span>
+                  <span>The student works through the exercise on screen</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="flex-none w-5 h-5 rounded-full bg-ink-red-soft text-ink-red text-xs font-semibold flex items-center justify-center">
+                    3
+                  </span>
+                  <span>A structured summary is generated — ready to print or save as PDF</span>
+                </li>
+              </ol>
+            </div>
 
-          <div className="rounded-xl bg-background/80 backdrop-blur-sm p-6">
-            <h2 className="text-xs uppercase tracking-wider text-ink-orange font-semibold">
-              Why it's different
-            </h2>
-            <ul className="mt-4 space-y-3 text-sm leading-relaxed">
-              <li className="flex gap-3">
-                <span className="flex-none text-ink-orange" aria-hidden="true">
-                  —
-                </span>
-                <span>
-                  No accounts, no data collection — every answer stays on the student's device
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <span className="flex-none text-ink-orange" aria-hidden="true">
-                  —
-                </span>
-                <span>Time estimates on every exercise so you can plan your session</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="flex-none text-ink-orange" aria-hidden="true">
-                  —
-                </span>
-                <span>Works on any device with a browser — phone, tablet, or laptop</span>
-              </li>
-            </ul>
-          </div>
+            <div className="rounded-xl bg-background/80 backdrop-blur-sm p-6">
+              <h2 className="text-xs uppercase tracking-wider text-ink-orange font-semibold">
+                Why it's different
+              </h2>
+              <ul className="mt-4 space-y-3 text-sm leading-relaxed">
+                <li className="flex gap-3">
+                  <span className="flex-none text-ink-orange" aria-hidden="true">
+                    —
+                  </span>
+                  <span>
+                    No accounts, no data collection — every answer stays on the student's device
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="flex-none text-ink-orange" aria-hidden="true">
+                    —
+                  </span>
+                  <span>Time estimates on every exercise so you can plan your session</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="flex-none text-ink-orange" aria-hidden="true">
+                    —
+                  </span>
+                  <span>Works on any device with a browser — phone, tablet, or laptop</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
