@@ -102,15 +102,21 @@ export default function LeadingLaggingIndicators() {
       }
       const { supers = [], inters = [] } = parsed.data;
       const goals: Goal[] = [
-        ...supers.filter((n) => n && typeof n.text === "string" && n.text.trim()).map((n) => ({ id: newId(), text: n.text.trim() })),
-        ...inters.filter((n) => n && typeof n.text === "string" && n.text.trim()).map((n) => ({ id: newId(), text: n.text.trim() })),
+        ...supers
+          .filter((n) => n && typeof n.text === "string" && n.text.trim())
+          .map((n) => ({ id: newId(), text: n.text.trim() })),
+        ...inters
+          .filter((n) => n && typeof n.text === "string" && n.text.trim())
+          .map((n) => ({ id: newId(), text: n.text.trim() })),
       ];
       if (goals.length === 0) {
         setImportMsg("That goal network has no goals to import.");
         return;
       }
       setData((d) => ({ ...d, goals: [...d.goals, ...goals] }));
-      setImportMsg(`Imported ${goals.length} goal${goals.length === 1 ? "" : "s"} from your goal network.`);
+      setImportMsg(
+        `Imported ${goals.length} goal${goals.length === 1 ? "" : "s"} from your goal network.`,
+      );
     } catch {
       setImportMsg("Couldn't read that file — it may be damaged.");
     }
@@ -120,7 +126,13 @@ export default function LeadingLaggingIndicators() {
 
   const exportFile = () => {
     const blob = new Blob(
-      [JSON.stringify({ kind: SLUG, version: FILE_VERSION, savedAt: new Date().toISOString(), data }, null, 2)],
+      [
+        JSON.stringify(
+          { kind: SLUG, version: FILE_VERSION, savedAt: new Date().toISOString(), data },
+          null,
+          2,
+        ),
+      ],
       { type: "application/json" },
     );
     const url = URL.createObjectURL(blob);
@@ -184,7 +196,10 @@ export default function LeadingLaggingIndicators() {
     if (!text.trim()) return;
     setData((d) => ({
       ...d,
-      lagging: [...d.lagging, { id: newId(), text: text.trim(), measure: "", timeframe: "", goalIds: [] }],
+      lagging: [
+        ...d.lagging,
+        { id: newId(), text: text.trim(), measure: "", timeframe: "", goalIds: [] },
+      ],
     }));
   };
 
@@ -192,18 +207,29 @@ export default function LeadingLaggingIndicators() {
     setData((d) => ({
       ...d,
       lagging: d.lagging.filter((l) => l.id !== id),
-      leading: d.leading.map((l) => ({ ...l, laggingIds: l.laggingIds.filter((lid) => lid !== id) })),
+      leading: d.leading.map((l) => ({
+        ...l,
+        laggingIds: l.laggingIds.filter((lid) => lid !== id),
+      })),
     }));
 
   const updateLagging = (id: string, patch: Partial<LaggingIndicator>) =>
-    setData((d) => ({ ...d, lagging: d.lagging.map((l) => (l.id === id ? { ...l, ...patch } : l)) }));
+    setData((d) => ({
+      ...d,
+      lagging: d.lagging.map((l) => (l.id === id ? { ...l, ...patch } : l)),
+    }));
 
   const toggleLaggingGoal = (laggingId: string, goalId: string) =>
     setData((d) => ({
       ...d,
       lagging: d.lagging.map((l) =>
         l.id === laggingId
-          ? { ...l, goalIds: l.goalIds.includes(goalId) ? l.goalIds.filter((g) => g !== goalId) : [...l.goalIds, goalId] }
+          ? {
+              ...l,
+              goalIds: l.goalIds.includes(goalId)
+                ? l.goalIds.filter((g) => g !== goalId)
+                : [...l.goalIds, goalId],
+            }
           : l,
       ),
     }));
@@ -220,18 +246,29 @@ export default function LeadingLaggingIndicators() {
     setData((d) => ({
       ...d,
       leading: d.leading.filter((l) => l.id !== id),
-      commitment: { ...d.commitment, leadingIds: d.commitment.leadingIds.filter((lid) => lid !== id) },
+      commitment: {
+        ...d.commitment,
+        leadingIds: d.commitment.leadingIds.filter((lid) => lid !== id),
+      },
     }));
 
   const updateLeading = (id: string, patch: Partial<LeadingIndicator>) =>
-    setData((d) => ({ ...d, leading: d.leading.map((l) => (l.id === id ? { ...l, ...patch } : l)) }));
+    setData((d) => ({
+      ...d,
+      leading: d.leading.map((l) => (l.id === id ? { ...l, ...patch } : l)),
+    }));
 
   const toggleLeadingLagging = (leadingId: string, laggingId: string) =>
     setData((d) => ({
       ...d,
       leading: d.leading.map((l) =>
         l.id === leadingId
-          ? { ...l, laggingIds: l.laggingIds.includes(laggingId) ? l.laggingIds.filter((lid) => lid !== laggingId) : [...l.laggingIds, laggingId] }
+          ? {
+              ...l,
+              laggingIds: l.laggingIds.includes(laggingId)
+                ? l.laggingIds.filter((lid) => lid !== laggingId)
+                : [...l.laggingIds, laggingId],
+            }
           : l,
       ),
     }));
@@ -332,7 +369,9 @@ export default function LeadingLaggingIndicators() {
       </div>
 
       {importMsg && step !== "goals" && (
-        <p role="status" className="text-xs text-muted-foreground">{importMsg}</p>
+        <p role="status" className="text-xs text-muted-foreground">
+          {importMsg}
+        </p>
       )}
     </div>
   );
@@ -361,16 +400,16 @@ function IntroStep({ onNext }: { onNext: () => void }) {
         <InfoCard title="Leading vs lagging">
           A <strong>leading indicator</strong> is something you can directly do or control — hours
           studied, meals prepped, applications sent. A <strong>lagging indicator</strong> is the
-          result that follows — exam grade, weight, job offer. Leading indicators are predictive
-          and influenceable; lagging indicators are confirmable but only after the fact.
+          result that follows — exam grade, weight, job offer. Leading indicators are predictive and
+          influenceable; lagging indicators are confirmable but only after the fact.
         </InfoCard>
         <InfoCard title="From your Goal Network">
           If you've completed the{" "}
           <a href="/exercise/goal-network" className="underline text-ink-orange hover:text-ink-red">
             Goal Network
           </a>{" "}
-          exercise, your subordinate goals are already good candidates for leading indicators,
-          and your superordinate goals often map to lagging indicators. This exercise makes that
+          exercise, your subordinate goals are already good candidates for leading indicators, and
+          your superordinate goals often map to lagging indicators. This exercise makes that
           relationship explicit and adds measurement.
         </InfoCard>
       </div>
@@ -406,20 +445,22 @@ function GoalsStep({
       <div>
         <h3 className="text-lg font-semibold">Your goals</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Enter 2–4 goals you want to track. These are the outcomes you care about — they'll
-          become the top tier of your indicator network.
+          Enter 2–4 goals you want to track. These are the outcomes you care about — they'll become
+          the top tier of your indicator network.
         </p>
       </div>
 
       <div className="rounded-xl border border-dashed border-ink-orange/40 bg-ink-ochre-soft/30 p-4 space-y-3">
         <p className="text-sm font-medium">Import from Goal Network</p>
         <p className="text-xs text-muted-foreground">
-          Upload a saved goal network file to pull in your superordinate and intermediate goals
-          as a starting point.
+          Upload a saved goal network file to pull in your superordinate and intermediate goals as a
+          starting point.
         </p>
         <UploadButton label="Upload goal network .json" accept=".json" onFile={importGoalNetwork} />
         {importMsg && (
-          <p role="status" className="text-xs text-muted-foreground">{importMsg}</p>
+          <p role="status" className="text-xs text-muted-foreground">
+            {importMsg}
+          </p>
         )}
       </div>
 
@@ -449,7 +490,10 @@ function GoalsStep({
 
       <div className="space-y-2">
         {goals.map((g) => (
-          <div key={g.id} className="flex items-center gap-2 rounded-xl border border-border bg-background p-3">
+          <div
+            key={g.id}
+            className="flex items-center gap-2 rounded-xl border border-border bg-background p-3"
+          >
             <AutoTextArea
               value={g.text}
               onChange={(e) => updateGoal(g.id, e.target.value)}
@@ -509,8 +553,8 @@ function IndicatorsStep({
           <p className="text-xs font-semibold uppercase tracking-wider text-ink-orange">Outcomes</p>
           <h3 className="text-lg font-semibold">Lagging indicators</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            For each goal, what results would tell you you're succeeding? These are the outcomes
-            you measure but can't directly control day-to-day.
+            For each goal, what results would tell you you're succeeding? These are the outcomes you
+            measure but can't directly control day-to-day.
           </p>
         </div>
 
@@ -542,7 +586,10 @@ function IndicatorsStep({
           {data.lagging.map((l) => {
             const open = openId === l.id;
             return (
-              <div key={l.id} className="rounded-xl border border-border bg-background p-3 space-y-2">
+              <div
+                key={l.id}
+                className="rounded-xl border border-border bg-background p-3 space-y-2"
+              >
                 <div className="flex items-start gap-2">
                   <AutoTextArea
                     value={l.text}
@@ -566,7 +613,10 @@ function IndicatorsStep({
 
                 {open && (
                   <div className="space-y-2 pl-1">
-                    <Field label="How would you measure this?" hint="The specific metric or evidence.">
+                    <Field
+                      label="How would you measure this?"
+                      hint="The specific metric or evidence."
+                    >
                       <TextInput
                         value={l.measure}
                         onChange={(e) => updateLagging(l.id, { measure: e.target.value })}
@@ -665,7 +715,10 @@ function IndicatorsStep({
           {data.leading.map((l) => {
             const open = openId === l.id;
             return (
-              <div key={l.id} className="rounded-xl border border-border bg-background p-3 space-y-2">
+              <div
+                key={l.id}
+                className="rounded-xl border border-border bg-background p-3 space-y-2"
+              >
                 <div className="flex items-start gap-2">
                   <AutoTextArea
                     value={l.text}
@@ -749,10 +802,20 @@ function IndicatorsStep({
 
 // ── Network visualisation ───────────────────────────────────────────────────
 
+const EDGE_COLORS = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+];
+
 function NetworkStep({ data }: { data: Data }) {
   const wrap = useRef<HTMLDivElement | null>(null);
   const nodeRefs = useRef(new Map<string, HTMLElement>());
-  const [edges, setEdges] = useState<{ id: string; d: string; strong: boolean; color: string }[]>([]);
+  const [edges, setEdges] = useState<{ id: string; d: string; strong: boolean; color: string }[]>(
+    [],
+  );
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [hover, setHover] = useState<string | null>(null);
 
@@ -760,14 +823,6 @@ function NetworkStep({ data }: { data: Data }) {
     if (el) nodeRefs.current.set(id, el);
     else nodeRefs.current.delete(id);
   };
-
-  const EDGE_COLORS = [
-    "var(--chart-1)",
-    "var(--chart-2)",
-    "var(--chart-3)",
-    "var(--chart-4)",
-    "var(--chart-5)",
-  ];
 
   const measure = useCallback(() => {
     const box = wrap.current?.getBoundingClientRect();
@@ -855,7 +910,12 @@ function NetworkStep({ data }: { data: Data }) {
               ? 150
               : 130;
 
-  const rows: { key: string; label: string; sublabel: string; items: { id: string; text: string; linkCount: number }[] }[] = [
+  const rows: {
+    key: string;
+    label: string;
+    sublabel: string;
+    items: { id: string; text: string; linkCount: number }[];
+  }[] = [
     {
       key: "goals",
       label: "Goals",
@@ -960,19 +1020,16 @@ function NetworkStep({ data }: { data: Data }) {
         <InfoCard title="What the map says">
           <ul className="space-y-1.5">
             <li>
-              <strong>{highLeverage.length}</strong> leading indicator{highLeverage.length === 1 ? "" : "s"}{" "}
+              <strong>{highLeverage.length}</strong> leading indicator
+              {highLeverage.length === 1 ? "" : "s"}{" "}
               {highLeverage.length === 1 ? "drives" : "drive"} more than one outcome.
-              {highLeverage.length > 0 && (
-                <> ({highLeverage.map((l) => l.text).join(", ")})</>
-              )}
+              {highLeverage.length > 0 && <> ({highLeverage.map((l) => l.text).join(", ")})</>}
             </li>
             <li>
-              <strong>{unsupported.length}</strong> lagging indicator{unsupported.length === 1 ? "" : "s"}{" "}
-              {unsupported.length === 1 ? "has" : "have"} no leading indicator feeding{" "}
-              {unsupported.length === 1 ? "it" : "them"} — a blind spot.
-              {unsupported.length > 0 && (
-                <> ({unsupported.map((l) => l.text).join(", ")})</>
-              )}
+              <strong>{unsupported.length}</strong> lagging indicator
+              {unsupported.length === 1 ? "" : "s"} {unsupported.length === 1 ? "has" : "have"} no
+              leading indicator feeding {unsupported.length === 1 ? "it" : "them"} — a blind spot.
+              {unsupported.length > 0 && <> ({unsupported.map((l) => l.text).join(", ")})</>}
             </li>
             {unlinkedLagging.length > 0 && (
               <li className="text-muted-foreground">
@@ -1008,8 +1065,8 @@ function ReflectStep({
       <div>
         <h3 className="text-lg font-semibold">Reflection and commitment</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          You can't move every leading indicator at once. Pick 1–2 to track this week — the ones
-          you believe will have the biggest effect on your outcomes.
+          You can't move every leading indicator at once. Pick 1–2 to track this week — the ones you
+          believe will have the biggest effect on your outcomes.
         </p>
       </div>
 
@@ -1106,7 +1163,10 @@ function SummaryStep({ data }: { data: Data }) {
             {data.lagging.map((l) => {
               const goals = data.goals.filter((g) => l.goalIds.includes(g.id));
               return (
-                <div key={l.id} className="rounded-xl border border-border bg-card p-3 text-sm space-y-1">
+                <div
+                  key={l.id}
+                  className="rounded-xl border border-border bg-card p-3 text-sm space-y-1"
+                >
                   <p className="font-medium">{l.text}</p>
                   {l.measure && <p className="text-muted-foreground">Measure: {l.measure}</p>}
                   {l.timeframe && <p className="text-muted-foreground">Timeframe: {l.timeframe}</p>}
@@ -1131,7 +1191,10 @@ function SummaryStep({ data }: { data: Data }) {
             {data.leading.map((l) => {
               const lagging = data.lagging.filter((lag) => l.laggingIds.includes(lag.id));
               return (
-                <div key={l.id} className="rounded-xl border border-border bg-card p-3 text-sm space-y-1">
+                <div
+                  key={l.id}
+                  className="rounded-xl border border-border bg-card p-3 text-sm space-y-1"
+                >
                   <p className="font-medium">
                     {l.text}
                     {l.laggingIds.length >= 2 && (
@@ -1189,8 +1252,8 @@ function SummaryStep({ data }: { data: Data }) {
       {highLeverage.length > 0 && (
         <InfoCard title="Your highest-leverage actions">
           {highLeverage.map((l) => l.text).join(", ")}{" "}
-          {highLeverage.length === 1 ? "feeds" : "each feed"} multiple outcomes. On a
-          low-motivation day, these are the ones worth protecting.
+          {highLeverage.length === 1 ? "feeds" : "each feed"} multiple outcomes. On a low-motivation
+          day, these are the ones worth protecting.
         </InfoCard>
       )}
     </div>
