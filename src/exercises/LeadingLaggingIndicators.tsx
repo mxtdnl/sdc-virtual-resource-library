@@ -13,7 +13,7 @@ import {
 const SLUG = "leading-lagging-indicators";
 const FILE_VERSION = 1;
 
-type Goal = { id: string; text: string };
+type Goal = { id: string; text: string; level?: "super" | "inter" | "sub" };
 type LaggingIndicator = {
   id: string;
   text: string;
@@ -26,6 +26,7 @@ type LeadingIndicator = {
   text: string;
   frequency: string;
   laggingIds: string[];
+  goalIds: string[];
 };
 type Commitment = { leadingIds: string[]; unit: string; checkIn: string };
 
@@ -94,20 +95,28 @@ export default function LeadingLaggingIndicators() {
     try {
       const parsed = JSON.parse(await file.text()) as {
         kind?: string;
-        data?: { supers?: { id: string; text: string }[]; inters?: { id: string; text: string }[] };
+        data?: {
+          supers?: { id: string; text: string }[];
+          inters?: { id: string; text: string }[];
+          subs?: { id: string; text: string }[];
+        };
       };
       if (parsed?.kind !== "goal-network" || !parsed.data) {
         setImportMsg("That file isn't a saved goal network.");
         return;
       }
-      const { supers = [], inters = [] } = parsed.data;
+      const { supers = [], inters = [], subs = [] } = parsed.data;
+      const valid = (n: { text?: string }) => n && typeof n.text === "string" && n.text.trim();
       const goals: Goal[] = [
         ...supers
-          .filter((n) => n && typeof n.text === "string" && n.text.trim())
-          .map((n) => ({ id: newId(), text: n.text.trim() })),
+          .filter(valid)
+          .map((n) => ({ id: newId(), text: n.text.trim(), level: "super" as const })),
         ...inters
-          .filter((n) => n && typeof n.text === "string" && n.text.trim())
-          .map((n) => ({ id: newId(), text: n.text.trim() })),
+          .filter(valid)
+          .map((n) => ({ id: newId(), text: n.text.trim(), level: "inter" as const })),
+        ...subs
+          .filter(valid)
+          .map((n) => ({ id: newId(), text: n.text.trim(), level: "sub" as const })),
       ];
       if (goals.length === 0) {
         setImportMsg("That goal network has no goals to import.");
@@ -160,7 +169,9 @@ export default function LeadingLaggingIndicators() {
       setData({
         goals: d.goals.filter((g) => g && typeof g.text === "string"),
         lagging: d.lagging.filter((l) => l && typeof l.text === "string"),
-        leading: d.leading.filter((l) => l && typeof l.text === "string"),
+        leading: d.leading
+          .filter((l) => l && typeof l.text === "string")
+          .map((l) => ({ ...l, goalIds: Array.isArray(l.goalIds) ? l.goalIds : [] })),
         commitment: d.commitment ?? EMPTY.commitment,
       });
       setImportMsg("Loaded. Your indicators are back and editable.");
@@ -187,6 +198,7 @@ export default function LeadingLaggingIndicators() {
       ...d,
       goals: d.goals.filter((g) => g.id !== id),
       lagging: d.lagging.map((l) => ({ ...l, goalIds: l.goalIds.filter((gid) => gid !== id) })),
+      leading: d.leading.map((l) => ({ ...l, goalIds: l.goalIds.filter((gid) => gid !== id) })),
     }));
 
   const updateGoal = (id: string, text: string) =>
@@ -238,7 +250,10 @@ export default function LeadingLaggingIndicators() {
     if (!text.trim()) return;
     setData((d) => ({
       ...d,
-      leading: [...d.leading, { id: newId(), text: text.trim(), frequency: "", laggingIds: [] }],
+      leading: [
+        ...d.leading,
+        { id: newId(), text: text.trim(), frequency: "", laggingIds: [], goalIds: [] },
+      ],
     }));
   };
 
@@ -268,6 +283,21 @@ export default function LeadingLaggingIndicators() {
               laggingIds: l.laggingIds.includes(laggingId)
                 ? l.laggingIds.filter((lid) => lid !== laggingId)
                 : [...l.laggingIds, laggingId],
+            }
+          : l,
+      ),
+    }));
+
+  const toggleLeadingGoal = (leadingId: string, goalId: string) =>
+    setData((d) => ({
+      ...d,
+      leading: d.leading.map((l) =>
+        l.id === leadingId
+          ? {
+              ...l,
+              goalIds: l.goalIds.includes(goalId)
+                ? l.goalIds.filter((gid) => gid !== goalId)
+                : [...l.goalIds, goalId],
             }
           : l,
       ),
@@ -329,6 +359,7 @@ export default function LeadingLaggingIndicators() {
           removeLeading={removeLeading}
           updateLeading={updateLeading}
           toggleLeadingLagging={toggleLeadingLagging}
+          toggleLeadingGoal={toggleLeadingGoal}
         />
       )}
 
@@ -408,9 +439,9 @@ function IntroStep({ onNext }: { onNext: () => void }) {
           <a href="/exercise/goal-network" className="underline text-ink-orange hover:text-ink-red">
             Goal Network
           </a>{" "}
-          exercise, your subordinate goals are already good candidates for leading indicators, and
-          your superordinate goals often map to lagging indicators. This exercise makes that
-          relationship explicit and adds measurement.
+          exercise, import your goals and they'll be tagged by level. Superordinate and intermediate
+          goals link to lagging indicators (outcomes), while subordinate goals link to leading
+          indicators (actions). This exercise makes that relationship explicit and adds measurement.
         </InfoCard>
       </div>
 
@@ -453,8 +484,9 @@ function GoalsStep({
       <div className="rounded-xl border border-dashed border-ink-orange/40 bg-ink-ochre-soft/30 p-4 space-y-3">
         <p className="text-sm font-medium">Import from Goal Network</p>
         <p className="text-xs text-muted-foreground">
-          Upload a saved goal network file to pull in your superordinate and intermediate goals as a
-          starting point.
+          Upload a saved goal network file to pull in your superordinate, intermediate, and
+          subordinate goals. On the next step, supers and inters will link to lagging indicators
+          while subs will link to leading indicators.
         </p>
         <UploadButton label="Upload goal network .json" accept=".json" onFile={importGoalNetwork} />
         {importMsg && (
@@ -494,6 +526,23 @@ function GoalsStep({
             key={g.id}
             className="flex items-center gap-2 rounded-xl border border-border bg-background p-3"
           >
+            {g.level && (
+              <span
+                className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                  g.level === "super"
+                    ? "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
+                    : g.level === "inter"
+                      ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
+                      : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+                }`}
+              >
+                {g.level === "super"
+                  ? "superordinate"
+                  : g.level === "inter"
+                    ? "intermediate"
+                    : "subordinate"}
+              </span>
+            )}
             <AutoTextArea
               value={g.text}
               onChange={(e) => updateGoal(g.id, e.target.value)}
@@ -530,6 +579,7 @@ function IndicatorsStep({
   removeLeading,
   updateLeading,
   toggleLeadingLagging,
+  toggleLeadingGoal,
 }: {
   data: Data;
   addLagging: (text: string) => void;
@@ -540,10 +590,13 @@ function IndicatorsStep({
   removeLeading: (id: string) => void;
   updateLeading: (id: string, patch: Partial<LeadingIndicator>) => void;
   toggleLeadingLagging: (leadingId: string, laggingId: string) => void;
+  toggleLeadingGoal: (leadingId: string, goalId: string) => void;
 }) {
   const [lagDraft, setLagDraft] = useState("");
   const [leadDraft, setLeadDraft] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
+  const laggingGoals = data.goals.filter((g) => g.level !== "sub");
+  const subGoals = data.goals.filter((g) => g.level === "sub");
 
   return (
     <div className="space-y-10">
@@ -643,10 +696,10 @@ function IndicatorsStep({
                   </div>
                 )}
 
-                {data.goals.length > 0 && (
+                {laggingGoals.length > 0 && (
                   <div className="no-print flex flex-wrap items-center gap-1.5">
                     <span className="text-xs text-muted-foreground">Goal:</span>
-                    {data.goals.map((g) => {
+                    {laggingGoals.map((g) => {
                       const on = l.goalIds.includes(g.id);
                       return (
                         <button
@@ -786,6 +839,29 @@ function IndicatorsStep({
                     )}
                   </div>
                 )}
+
+                {subGoals.length > 0 && (
+                  <div className="no-print flex flex-wrap items-center gap-1.5">
+                    <span className="text-xs text-muted-foreground">Sub-goal:</span>
+                    {subGoals.map((g) => {
+                      const on = l.goalIds.includes(g.id);
+                      return (
+                        <button
+                          key={g.id}
+                          onClick={() => toggleLeadingGoal(l.id, g.id)}
+                          aria-pressed={on}
+                          className={`rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
+                            on
+                              ? "border-transparent bg-emerald-600 text-white dark:bg-emerald-700"
+                              : "border-border text-muted-foreground hover:bg-secondary"
+                          }`}
+                        >
+                          {g.text || "Untitled"}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}
@@ -873,6 +949,21 @@ function NetworkStep({ data }: { data: Data }) {
           color: parentColorMap.get(lagId) ?? "var(--border)",
         });
       }
+      for (const goalId of lead.goalIds) {
+        const p = nodeRefs.current.get(goalId)?.getBoundingClientRect();
+        if (!p) continue;
+        const x1 = p.left + p.width / 2 - box.left;
+        const y1 = p.bottom - box.top;
+        const x2 = c.left + c.width / 2 - box.left;
+        const y2 = c.top - box.top;
+        const mid = (y1 + y2) / 2;
+        next.push({
+          id: `${lead.id}-${goalId}`,
+          d: `M ${x1} ${y1} C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`,
+          strong: false,
+          color: parentColorMap.get(goalId) ?? "var(--border)",
+        });
+      }
     }
 
     setEdges(next);
@@ -910,6 +1001,9 @@ function NetworkStep({ data }: { data: Data }) {
               ? 150
               : 130;
 
+  const topGoals = data.goals.filter((g) => g.level !== "sub");
+  const subGoals = data.goals.filter((g) => g.level === "sub");
+
   const rows: {
     key: string;
     label: string;
@@ -918,9 +1012,9 @@ function NetworkStep({ data }: { data: Data }) {
   }[] = [
     {
       key: "goals",
-      label: "Goals",
+      label: topGoals.some((g) => g.level) ? "Superordinate & intermediate goals" : "Goals",
       sublabel: "What you're working toward",
-      items: data.goals.map((g) => ({ id: g.id, text: g.text, linkCount: 0 })),
+      items: topGoals.map((g) => ({ id: g.id, text: g.text, linkCount: 0 })),
     },
     {
       key: "lagging",
@@ -928,11 +1022,25 @@ function NetworkStep({ data }: { data: Data }) {
       sublabel: "Outcomes you measure",
       items: data.lagging.map((l) => ({ id: l.id, text: l.text, linkCount: l.goalIds.length })),
     },
+    ...(subGoals.length > 0
+      ? [
+          {
+            key: "subs",
+            label: "Subordinate goals",
+            sublabel: "Concrete actions from your goal network",
+            items: subGoals.map((g) => ({ id: g.id, text: g.text, linkCount: 0 })),
+          },
+        ]
+      : []),
     {
       key: "leading",
       label: "Leading indicators",
-      sublabel: "Actions you control",
-      items: data.leading.map((l) => ({ id: l.id, text: l.text, linkCount: l.laggingIds.length })),
+      sublabel: "Inputs you control",
+      items: data.leading.map((l) => ({
+        id: l.id,
+        text: l.text,
+        linkCount: l.laggingIds.length + l.goalIds.length,
+      })),
     },
   ];
 
@@ -1148,7 +1256,20 @@ function SummaryStep({ data }: { data: Data }) {
           <h4 className="text-sm font-semibold uppercase tracking-wider text-ink-orange">Goals</h4>
           <ul className="space-y-1 text-sm">
             {data.goals.map((g) => (
-              <li key={g.id}>• {g.text}</li>
+              <li key={g.id}>
+                • {g.text}
+                {g.level && (
+                  <span className="ml-1.5 text-xs text-muted-foreground">
+                    (
+                    {g.level === "super"
+                      ? "superordinate"
+                      : g.level === "inter"
+                        ? "intermediate"
+                        : "subordinate"}
+                    )
+                  </span>
+                )}
+              </li>
             ))}
           </ul>
         </section>
@@ -1190,6 +1311,7 @@ function SummaryStep({ data }: { data: Data }) {
           <div className="space-y-2">
             {data.leading.map((l) => {
               const lagging = data.lagging.filter((lag) => l.laggingIds.includes(lag.id));
+              const linkedSubs = data.goals.filter((g) => l.goalIds.includes(g.id));
               return (
                 <div
                   key={l.id}
@@ -1207,6 +1329,12 @@ function SummaryStep({ data }: { data: Data }) {
                   {lagging.length > 0 && (
                     <p className="text-muted-foreground">
                       Drives: {lagging.map((lag) => lag.text).join(", ")}
+                    </p>
+                  )}
+                  {linkedSubs.length > 0 && (
+                    <p className="text-muted-foreground">
+                      Sub-goal{linkedSubs.length > 1 ? "s" : ""}:{" "}
+                      {linkedSubs.map((g) => g.text).join(", ")}
                     </p>
                   )}
                 </div>
