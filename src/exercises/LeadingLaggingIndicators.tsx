@@ -108,9 +108,15 @@ export default function LeadingLaggingIndicators() {
       const { supers = [], inters = [], subs = [] } = parsed.data;
       const valid = (n: { text?: string }) => n && typeof n.text === "string" && n.text.trim();
       const goals: Goal[] = [
-        ...supers.filter(valid).map((n) => ({ id: newId(), text: n.text.trim(), level: "super" as const })),
-        ...inters.filter(valid).map((n) => ({ id: newId(), text: n.text.trim(), level: "inter" as const })),
-        ...subs.filter(valid).map((n) => ({ id: newId(), text: n.text.trim(), level: "sub" as const })),
+        ...supers
+          .filter(valid)
+          .map((n) => ({ id: newId(), text: n.text.trim(), level: "super" as const })),
+        ...inters
+          .filter(valid)
+          .map((n) => ({ id: newId(), text: n.text.trim(), level: "inter" as const })),
+        ...subs
+          .filter(valid)
+          .map((n) => ({ id: newId(), text: n.text.trim(), level: "sub" as const })),
       ];
       if (goals.length === 0) {
         setImportMsg("That goal network has no goals to import.");
@@ -244,7 +250,10 @@ export default function LeadingLaggingIndicators() {
     if (!text.trim()) return;
     setData((d) => ({
       ...d,
-      leading: [...d.leading, { id: newId(), text: text.trim(), frequency: "", laggingIds: [], goalIds: [] }],
+      leading: [
+        ...d.leading,
+        { id: newId(), text: text.trim(), frequency: "", laggingIds: [], goalIds: [] },
+      ],
     }));
   };
 
@@ -527,7 +536,11 @@ function GoalsStep({
                       : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
                 }`}
               >
-                {g.level === "super" ? "superordinate" : g.level === "inter" ? "intermediate" : "subordinate"}
+                {g.level === "super"
+                  ? "superordinate"
+                  : g.level === "inter"
+                    ? "intermediate"
+                    : "subordinate"}
               </span>
             )}
             <AutoTextArea
@@ -1247,7 +1260,13 @@ function SummaryStep({ data }: { data: Data }) {
                 • {g.text}
                 {g.level && (
                   <span className="ml-1.5 text-xs text-muted-foreground">
-                    ({g.level === "super" ? "superordinate" : g.level === "inter" ? "intermediate" : "subordinate"})
+                    (
+                    {g.level === "super"
+                      ? "superordinate"
+                      : g.level === "inter"
+                        ? "intermediate"
+                        : "subordinate"}
+                    )
                   </span>
                 )}
               </li>
@@ -1314,7 +1333,8 @@ function SummaryStep({ data }: { data: Data }) {
                   )}
                   {linkedSubs.length > 0 && (
                     <p className="text-muted-foreground">
-                      Sub-goal{linkedSubs.length > 1 ? "s" : ""}: {linkedSubs.map((g) => g.text).join(", ")}
+                      Sub-goal{linkedSubs.length > 1 ? "s" : ""}:{" "}
+                      {linkedSubs.map((g) => g.text).join(", ")}
                     </p>
                   )}
                 </div>
