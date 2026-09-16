@@ -30,8 +30,7 @@ const STRENGTHS: Strength[] = [
     virtue: "Wisdom",
     balance:
       "You come up with original ways to look at situations and things, discovering inventive ways to solve problems, create products, or express ideas.",
-    overused:
-      "You can be seen as eccentric or odd, prioritizing novelty over usefulness.",
+    overused: "You can be seen as eccentric or odd, prioritizing novelty over usefulness.",
     underused: "You conform to the well-known path and rarely innovate.",
   },
   {
@@ -40,10 +39,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Wisdom",
     balance:
       "You’re drawn to new experiences and topics simply for their own sake. You ask questions, explore the unfamiliar, and enjoy discovering.",
-    overused:
-      "You can be nosy or lose yourself chasing details that don’t matter.",
-    underused:
-      "You come across as uninterested and closed off to new things.",
+    overused: "You can be nosy or lose yourself chasing details that don’t matter.",
+    underused: "You come across as uninterested and closed off to new things.",
   },
   {
     id: "judgment",
@@ -53,8 +50,7 @@ const STRENGTHS: Strength[] = [
       "You think critically, avoid jumping to conclusions, and change your opinion in light of new evidence. You weigh things objectively.",
     overused:
       "You can get stuck seeing pitfalls and problems, sliding into negativity or cynicism.",
-    underused:
-      "You don’t reflect on your own or others’ behavior and can come across as naive.",
+    underused: "You don’t reflect on your own or others’ behavior and can come across as naive.",
   },
   {
     id: "love-of-learning",
@@ -64,8 +60,7 @@ const STRENGTHS: Strength[] = [
       "You want to build your skills and knowledge, in school, at work, or just for fun. You enjoy mastering new things.",
     overused:
       "You can come across as a know-it-all, needing to know every detail of how something works.",
-    underused:
-      "You repeat the same routines and rarely push yourself to learn or grow.",
+    underused: "You repeat the same routines and rarely push yourself to learn or grow.",
   },
   {
     id: "perspective",
@@ -73,8 +68,7 @@ const STRENGTHS: Strength[] = [
     virtue: "Wisdom",
     balance:
       "You can view a situation from multiple angles, connect it to the bigger picture, and offer wise counsel that others value.",
-    overused:
-      "You can come across as arrogant, as if you’ve got it all figured out.",
+    overused: "You can come across as arrogant, as if you’ve got it all figured out.",
     underused: "You’re shortsighted and miss the bigger picture.",
   },
   {
@@ -83,10 +77,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Courage",
     balance:
       "You don’t shy away from threat, challenge, or pain. You speak up for what’s right, even facing resistance, and act on your beliefs.",
-    overused:
-      "You’re reckless, ignoring real dangers to yourself or others.",
-    underused:
-      "You let fear dictate your decisions and let others do the hard part.",
+    overused: "You’re reckless, ignoring real dangers to yourself or others.",
+    underused: "You let fear dictate your decisions and let others do the hard part.",
   },
   {
     id: "perseverance",
@@ -94,8 +86,7 @@ const STRENGTHS: Strength[] = [
     virtue: "Courage",
     balance:
       "You finish what you start and push through obstacles. You’re industrious and satisfied by completing a task.",
-    overused:
-      "You can become obsessive, struggling to let go even when that would be wiser.",
+    overused: "You can become obsessive, struggling to let go even when that would be wiser.",
     underused: "You give up easily and feel defeated by setbacks.",
   },
   {
@@ -106,8 +97,7 @@ const STRENGTHS: Strength[] = [
       "You’re authentic and act with integrity, take responsibility for your actions and feelings, and present yourself as who you truly are.",
     overused:
       "You’re bluntly honest with no regard for others’ feelings, and can come across as self-righteous.",
-    underused:
-      "You come across as phony, withholding your real thoughts and feelings.",
+    underused: "You come across as phony, withholding your real thoughts and feelings.",
   },
   {
     id: "zest",
@@ -115,8 +105,7 @@ const STRENGTHS: Strength[] = [
     virtue: "Courage",
     balance:
       "You’re energetic and enthusiastic. You approach life as an adventure rather than going through the motions.",
-    overused:
-      "You can be hyperactive or overwhelming, leaving little room for others.",
+    overused: "You can be hyperactive or overwhelming, leaving little room for others.",
     underused: "You can come across as passive or boring.",
   },
   {
@@ -125,10 +114,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Humanity",
     balance:
       "You value close, meaningful relationships. Sharing, caring, and reciprocity matter to you, and you like being genuinely connected to others.",
-    overused:
-      "You open up too quickly, even when it isn’t appropriate.",
-    underused:
-      "You’re emotionally closed off and don’t let others in.",
+    overused: "You open up too quickly, even when it isn’t appropriate.",
+    underused: "You’re emotionally closed off and don’t let others in.",
   },
   {
     id: "kindness",
@@ -136,10 +123,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Humanity",
     balance:
       "You like doing favors and good deeds for others. You are generous, compassionate, and can extend that same care to yourself.",
-    overused:
-      "You’re intrusive with your help, not letting others do things for themselves.",
-    underused:
-      "You’re indifferent to others, or you lose yourself entirely in caring for them.",
+    overused: "You’re intrusive with your help, not letting others do things for themselves.",
+    underused: "You’re indifferent to others, or you lose yourself entirely in caring for them.",
   },
   {
     id: "social-intelligence",
@@ -147,10 +132,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Humanity",
     balance:
       "You’re aware of your own and others’ motives and feelings, and you adapt well across social situations.",
-    overused:
-      "You overanalyze people’s behavior, hunting for meaning in every act.",
-    underused:
-      "You don’t pick up on others’ feelings and can seem blunt or insensitive.",
+    overused: "You overanalyze people’s behavior, hunting for meaning in every act.",
+    underused: "You don’t pick up on others’ feelings and can seem blunt or insensitive.",
   },
   {
     id: "teamwork",
@@ -158,10 +141,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Justice",
     balance:
       "You cooperate well as a team member, take responsibility, contribute your share, and stay loyal to the group.",
-    overused:
-      "You become dependent on others and don’t act on your own easily.",
-    underused:
-      "You don’t care about the group’s interests and act selfishly.",
+    overused: "You become dependent on others and don’t act on your own easily.",
+    underused: "You don’t care about the group’s interests and act selfishly.",
   },
   {
     id: "fairness",
@@ -169,10 +150,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Justice",
     balance:
       "You treat everyone alike, in a just way, without letting personal feelings bias your decisions. You give everyone a fair chance.",
-    overused:
-      "You strictly obey rules without empathy, and can come across as uninvolved.",
-    underused:
-      "You choose sides or let your own preferences lead you.",
+    overused: "You strictly obey rules without empathy, and can come across as uninvolved.",
+    underused: "You choose sides or let your own preferences lead you.",
   },
   {
     id: "leadership",
@@ -180,10 +159,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Justice",
     balance:
       "You encourage groups to get things done while caring for the relationships within the group, organizing activities and making sure they happen.",
-    overused:
-      "You can be dictatorial, controlling people without letting them have a voice.",
-    underused:
-      "You don’t take the lead or make decisions, and you’re overly accommodating.",
+    overused: "You can be dictatorial, controlling people without letting them have a voice.",
+    underused: "You don’t take the lead or make decisions, and you’re overly accommodating.",
   },
   {
     id: "forgiveness",
@@ -191,8 +168,7 @@ const STRENGTHS: Strength[] = [
     virtue: "Temperance",
     balance:
       "You forgive others’ mistakes, give people second chances, and aren’t vengeful — including toward yourself.",
-    overused:
-      "You’re overly permissive and let people take advantage of you.",
+    overused: "You’re overly permissive and let people take advantage of you.",
     underused: "You hold onto resentment and show little mercy.",
   },
   {
@@ -211,8 +187,7 @@ const STRENGTHS: Strength[] = [
     virtue: "Temperance",
     balance:
       "You’re careful in your choices, avoiding unnecessary risks, and thoughtful about things you might later regret.",
-    overused:
-      "You can become anxious, worrying excessively about outcomes.",
+    overused: "You can become anxious, worrying excessively about outcomes.",
     underused: "You act without thinking and take on too much risk.",
   },
   {
@@ -221,10 +196,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Temperance",
     balance:
       "You control what you do, say, and feel. You are disciplined, manage your emotions well, and can overcome your vices.",
-    overused:
-      "You push past your limits and are rarely kind to yourself.",
-    underused:
-      "You act impulsively with your emotions or actions, or become self-indulgent.",
+    overused: "You push past your limits and are rarely kind to yourself.",
+    underused: "You act impulsively with your emotions or actions, or become self-indulgent.",
   },
   {
     id: "appreciation-of-beauty",
@@ -232,10 +205,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Transcendence",
     balance:
       "You notice and value beauty and excellence in nature and in great performances across every domain of life, and you experience awe.",
-    overused:
-      "You can become perfectionistic or elitist, overly demanding of yourself or others.",
-    underused:
-      "You don’t have an eye for what’s good and aren’t moved by beauty you encounter.",
+    overused: "You can become perfectionistic or elitist, overly demanding of yourself or others.",
+    underused: "You don’t have an eye for what’s good and aren’t moved by beauty you encounter.",
   },
   {
     id: "gratitude",
@@ -243,10 +214,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Transcendence",
     balance:
       "You feel and express thankfulness for the good things in life, directed at people or at something greater than yourself.",
-    overused:
-      "You can be overly flattering or theatrical in showing thanks.",
-    underused:
-      "You take things for granted and feel entitled to the good that comes your way.",
+    overused: "You can be overly flattering or theatrical in showing thanks.",
+    underused: "You take things for granted and feel entitled to the good that comes your way.",
   },
   {
     id: "hope",
@@ -254,10 +223,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Transcendence",
     balance:
       "You’re optimistic and future-oriented, expecting the best and working to make it happen.",
-    overused:
-      "You view the world through rose-tinted glasses and can be naive.",
-    underused:
-      "You’re cynical about the future and can feel like your efforts don’t matter.",
+    overused: "You view the world through rose-tinted glasses and can be naive.",
+    underused: "You’re cynical about the future and can feel like your efforts don’t matter.",
   },
   {
     id: "humor",
@@ -265,8 +232,7 @@ const STRENGTHS: Strength[] = [
     virtue: "Transcendence",
     balance:
       "You love to laugh and joke, bringing lightness to life and making others laugh without ridiculing anyone.",
-    overused:
-      "You don’t take anything seriously and can be brash at others’ expense.",
+    overused: "You don’t take anything seriously and can be brash at others’ expense.",
     underused: "You’re overly serious and short on perspective.",
   },
   {
@@ -275,10 +241,8 @@ const STRENGTHS: Strength[] = [
     virtue: "Transcendence",
     balance:
       "You hold coherent beliefs about a higher purpose and the meaning of life, which shape your behavior and bring you comfort.",
-    overused:
-      "You can become rigid in your worldview or try to convert others to it.",
-    underused:
-      "You lack strong guiding values and can experience life as meaningless.",
+    overused: "You can become rigid in your worldview or try to convert others to it.",
+    underused: "You lack strong guiding values and can experience life as meaningless.",
   },
 ];
 
@@ -308,18 +272,13 @@ export default function CharacterStrengths() {
   const [detail, setDetail] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
 
-  const byId = useMemo(
-    () => Object.fromEntries(STRENGTHS.map((s) => [s.id, s])),
-    [],
-  );
+  const byId = useMemo(() => Object.fromEntries(STRENGTHS.map((s) => [s.id, s])), []);
 
   const sorted = Object.values(placements).filter((z) => z !== "bank").length;
 
   const strengthsInZone = (zone: Zone) =>
     STRENGTHS.filter(
-      (s) =>
-        (placements[s.id] ?? "bank") === zone &&
-        (!filter || s.virtue === filter),
+      (s) => (placements[s.id] ?? "bank") === zone && (!filter || s.virtue === filter),
     );
 
   const virtueCounts = useMemo(() => {
@@ -403,7 +362,9 @@ export default function CharacterStrengths() {
           <GhostButton onClick={reset}>Reset board</GhostButton>
           <div className="text-right">
             <span className="text-xs text-muted-foreground">Sorted</span>
-            <div className="text-sm font-medium tabular-nums">{sorted} / {STRENGTHS.length}</div>
+            <div className="text-sm font-medium tabular-nums">
+              {sorted} / {STRENGTHS.length}
+            </div>
             <div className="mt-1 h-1.5 w-24 rounded-full bg-secondary overflow-hidden">
               <div
                 className="h-full rounded-full bg-primary transition-all"
