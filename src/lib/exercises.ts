@@ -39,6 +39,7 @@ import ActioningObjectives from "@/exercises/ActioningObjectives";
 import SkillsCards from "@/exercises/SkillsCards";
 import GoalNetwork from "@/exercises/GoalNetwork";
 import LeadingLaggingIndicators from "@/exercises/LeadingLaggingIndicators";
+import CharacterStrengths from "@/exercises/CharacterStrengths";
 
 export type Exercise = {
   slug: string;
@@ -433,6 +434,16 @@ export const EXERCISES: Exercise[] = [
     tags: ["presenting", "rehearsal", "delivery"],
     estimatedMinutes: 20,
     component: ActioningObjectives,
+  },
+  {
+    slug: "character-strengths",
+    title: "Character Strengths",
+    description:
+      "Sort 24 character strengths into Top, Middle, and Lesser — see what comes naturally and where your growth edges are.",
+    category: "Self-Awareness",
+    tags: ["strengths", "self-awareness", "reflection", "positive-psychology"],
+    estimatedMinutes: 20,
+    component: CharacterStrengths,
   },
   {
     slug: "wheel-of-hult",

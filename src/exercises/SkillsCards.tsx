@@ -206,6 +206,7 @@ const CARDS: Card[] = [
       {
         name: "VIA Character Strengths",
         note: "Identify your most-used strengths, and figure out how to dial up others.",
+        slug: "character-strengths",
       },
       {
         name: "The Table of Truth",
